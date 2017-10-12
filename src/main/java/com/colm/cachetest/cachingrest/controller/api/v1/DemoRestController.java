@@ -31,7 +31,7 @@ public class DemoRestController {
         return demoRepository.findAll();
     }
 
-//    @Cacheable (value = "post-single", key = "#id", unless = "#result.shares < 10")
+    @Cacheable (value = "post-single", key = "#id", unless = "#result.shares < 10")
     @RequestMapping (value = "/demo/{id}", method = RequestMethod.GET)
     public DemoObject findDemoById (@PathVariable Long id) {
         return demoRepository.findOne(id);
