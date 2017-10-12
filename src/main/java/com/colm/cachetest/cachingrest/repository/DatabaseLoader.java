@@ -17,7 +17,7 @@ public class DatabaseLoader implements CommandLineRunner {
 
     @Override
     public void run (String... string) throws Exception {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i <= 100; i++) {
             demoRepository.save(new DemoObject("Username" + i));
         }
     }
