@@ -1,6 +1,7 @@
 package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
+import com.colm.cachetest.cachingrest.RedisService;
 import com.colm.cachetest.cachingrest.model.DemoObject;
 import com.colm.cachetest.cachingrest.repository.DemoRepository;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class DemoRestController {
 
 
     @Autowired
+    RedisService redisService;
+
+    @Autowired
     private DemoRepository demoRepository;
 
     @RequestMapping (value = "/demo", method = RequestMethod.GET)
@@ -32,8 +36,7 @@ public class DemoRestController {
 
     @RequestMapping (value = "/demo/{id}", method = RequestMethod.GET)
     public DemoObject findDemoById (@PathVariable Long id) {
-        log.info("Finding One Demo Object");
-
+        redisService.sendMessage("User " + id);
         return demoRepository.findOne(id);
     }
 }
