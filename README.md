@@ -1,0 +1,1 @@
+The purpose of this project is to run a few rest requests, cache ones, compare times
