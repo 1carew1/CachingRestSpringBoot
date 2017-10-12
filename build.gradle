@@ -39,5 +39,6 @@ dependencies {
 	compile group: 'com.h2database', name: 'h2', version: '1.4.196'
 	compile "org.springframework.boot:spring-boot-starter-logging"
 	compile("org.springframework.boot:spring-boot-starter-data-redis")
+	compile "redis.clients:jedis:2.6.1"
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

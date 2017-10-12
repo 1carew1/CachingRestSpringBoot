@@ -5,9 +5,10 @@ package com.colm.cachetest.cachingrest.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
-public class DemoObject {
+public class DemoObject implements Serializable {
 
     private @Id
     @GeneratedValue
