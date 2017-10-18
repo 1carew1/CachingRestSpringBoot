@@ -1,11 +1,10 @@
 package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
-import ch.obermuhlner.math.big.BigDecimalMath;
 import com.colm.cachetest.cachingrest.model.DemoObject;
 import com.colm.cachetest.cachingrest.repository.DemoRepository;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.List;
 
 @RestController
@@ -34,16 +32,21 @@ public class DemoRestController {
         return demoRepository.findAll();
     }
 
-    @RequestMapping (value = "/complexMaths/{someNumber}", method = RequestMethod.GET)
+    @RequestMapping (value = "/cube/{someNumber}", method = RequestMethod.GET)
     public BigDecimal doSomeComplexMaths (@PathVariable int someNumber) {
-        log.info("Crunchin the Numbers");
-        MathContext mathContext = new MathContext(100);
-        // Some Dummy Logic
-        int numberToCalculate = someNumber;
-        if(numberToCalculate < 1 || numberToCalculate > 150 ){
-            numberToCalculate = 100;
+        log.info("Cubing : " + someNumber);
+        Long times = 0l;
+        //This essential Cubes a number
+        for (int i = 0; i < someNumber; i++) {
+            for (int j = 0; j < someNumber; j++) {
+                for (int k = 0; k < someNumber; k++) {
+                    times++;
+                }
+            }
         }
-        return BigDecimalMath.bernoulli(numberToCalculate, mathContext);
+        BigDecimal bigDecimal = BigDecimal.valueOf(times);
+        log.info(someNumber + "^3 = " + bigDecimal.toString());
+        return bigDecimal;
     }
 
     @Cacheable (value = "post-single", key = "#id", unless = "#result.shares < 10")
