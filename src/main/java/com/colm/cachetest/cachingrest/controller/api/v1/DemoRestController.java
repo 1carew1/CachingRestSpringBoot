@@ -1,8 +1,11 @@
 package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
+import com.colm.cachetest.cachingrest.model.CubedInfo;
 import com.colm.cachetest.cachingrest.model.DemoObject;
+import com.colm.cachetest.cachingrest.repository.CubedInfoRepository;
 import com.colm.cachetest.cachingrest.repository.DemoRepository;
+import com.colm.cachetest.cachingrest.service.CubedCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,11 @@ public class DemoRestController {
     @Autowired
     private DemoRepository demoRepository;
 
+    @Autowired
+    private CubedCacheService cubedCacheService;
+
+
+
     @RequestMapping (value = "/demo", method = RequestMethod.GET)
     public List<DemoObject> listAllDemos () {
         log.info("Finding All Demo Objects");
@@ -33,20 +41,11 @@ public class DemoRestController {
     }
 
     @RequestMapping (value = "/cube/{someNumber}", method = RequestMethod.GET)
-    public BigDecimal doSomeComplexMaths (@PathVariable int someNumber) {
+    public CubedInfo doSomeComplexMaths (@PathVariable Long someNumber) {
         log.info("Cubing : " + someNumber);
-        Long times = 0l;
-        //This essential Cubes a number
-        for (int i = 0; i < someNumber; i++) {
-            for (int j = 0; j < someNumber; j++) {
-                for (int k = 0; k < someNumber; k++) {
-                    times++;
-                }
-            }
-        }
-        BigDecimal bigDecimal = BigDecimal.valueOf(times);
-        log.info(someNumber + "^3 = " + bigDecimal.toString());
-        return bigDecimal;
+        CubedInfo cubedInfo = cubedCacheService.cubeAndStore(someNumber);
+        log.info(someNumber + "^3 = " + cubedInfo.getNumberCubed().toString());
+        return cubedInfo;
     }
 
     @Cacheable (value = "post-single", key = "#id", unless = "#result.shares < 10")

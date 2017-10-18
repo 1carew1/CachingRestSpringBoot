@@ -1,0 +1,49 @@
+package com.colm.cachetest.cachingrest.service;
+
+import com.colm.cachetest.cachingrest.model.CubedInfo;
+import com.colm.cachetest.cachingrest.repository.CubedInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
+@Service
+public class CubedCacheService {
+
+
+    @Autowired
+    private CubedInfoRepository cubedInfoRepository;
+
+    @CachePut (value="cubes", key="#someNumber")
+    public CubedInfo cubeAndStore(long someNumber){
+        Long times = 0l;
+        //This essential Cubes a number
+        for (int i = 0; i < someNumber; i++) {
+            for (int j = 0; j < someNumber; j++) {
+                for (int k = 0; k < someNumber; k++) {
+                    times++;
+                }
+            }
+        }
+        BigDecimal bigDecimal = BigDecimal.valueOf(times);
+        CubedInfo cubedInfo = cubedInfoRepository.findOne(someNumber);
+        if(cubedInfo == null) {
+            cubedInfo = new CubedInfo(someNumber, bigDecimal);
+            cubedInfoRepository.save(cubedInfo);
+        }
+        return cubedInfo;
+    }
+
+    @Cacheable (value="cubes", key="#someNumber")
+    public CubedInfo getCubedInfo(long someNumber){
+        return cubedInfoRepository.findOne(someNumber);
+    }
+
+    @CacheEvict (value = "cubes", key = "#someNumber")
+    public void evict(long someNumber){
+    }
+
+}
