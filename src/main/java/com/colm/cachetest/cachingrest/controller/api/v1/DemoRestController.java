@@ -43,7 +43,7 @@ public class DemoRestController {
     @RequestMapping (value = "/cube/{someNumber}", method = RequestMethod.GET)
     public CubedInfo doSomeComplexMaths (@PathVariable Long someNumber) {
         log.info("Cubing : " + someNumber);
-        CubedInfo cubedInfo = cubedCacheService.cubeAndStore(someNumber);
+        CubedInfo cubedInfo = cubedCacheService.getCubedInfo(someNumber);
         log.info(someNumber + "^3 = " + cubedInfo.getNumberCubed().toString());
         return cubedInfo;
     }

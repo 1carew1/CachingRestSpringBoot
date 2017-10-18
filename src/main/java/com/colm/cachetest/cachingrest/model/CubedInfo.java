@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class CubedInfo implements Serializable {
 
     @Id
-    @Column (unique=true)
+    @Column (unique = true)
     private Long number;
     private BigDecimal numberCubed;
 

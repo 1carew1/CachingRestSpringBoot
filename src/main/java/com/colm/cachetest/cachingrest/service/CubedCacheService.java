@@ -17,8 +17,15 @@ public class CubedCacheService {
     @Autowired
     private CubedInfoRepository cubedInfoRepository;
 
-    @CachePut (value="cubes", key="#someNumber")
-    public CubedInfo cubeAndStore(long someNumber){
+    @CachePut (value = "cubedInfos", key = "#someNumber")
+    public CubedInfo cubeAndStore (long someNumber, BigDecimal cubedOfSomeNumber) {
+        CubedInfo cubedInfo = new CubedInfo(someNumber, cubedOfSomeNumber);
+        cubedInfoRepository.save(cubedInfo);
+        return cubedInfo;
+    }
+
+    @Cacheable (value = "cubedInfos", key = "#someNumber")
+    public CubedInfo getCubedInfo (long someNumber) {
         Long times = 0l;
         //This essential Cubes a number
         for (int i = 0; i < someNumber; i++) {
@@ -30,20 +37,14 @@ public class CubedCacheService {
         }
         BigDecimal bigDecimal = BigDecimal.valueOf(times);
         CubedInfo cubedInfo = cubedInfoRepository.findOne(someNumber);
-        if(cubedInfo == null) {
-            cubedInfo = new CubedInfo(someNumber, bigDecimal);
-            cubedInfoRepository.save(cubedInfo);
+        if (cubedInfo == null) {
+            cubedInfo = cubeAndStore(someNumber, bigDecimal);
         }
         return cubedInfo;
     }
 
-    @Cacheable (value="cubes", key="#someNumber")
-    public CubedInfo getCubedInfo(long someNumber){
-        return cubedInfoRepository.findOne(someNumber);
-    }
-
-    @CacheEvict (value = "cubes", key = "#someNumber")
-    public void evict(long someNumber){
+    @CacheEvict (value = "cubedInfos", key = "#someNumber")
+    public void evict (long someNumber) {
     }
 
 }
