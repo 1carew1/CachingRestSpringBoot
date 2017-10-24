@@ -13,12 +13,11 @@ import java.math.BigDecimal;
 @Service
 public class CubedCacheService {
 
-
     @Autowired
     private CubedInfoRepository cubedInfoRepository;
 
     @CachePut (value = "cubedInfos", key = "#someNumber")
-    public CubedInfo cubeAndStore (long someNumber, BigDecimal cubedOfSomeNumber) {
+    public CubedInfo storeAndCacheCube (long someNumber, BigDecimal cubedOfSomeNumber) {
         CubedInfo cubedInfo = new CubedInfo(someNumber, cubedOfSomeNumber);
         cubedInfoRepository.save(cubedInfo);
         return cubedInfo;
@@ -38,7 +37,7 @@ public class CubedCacheService {
         BigDecimal bigDecimal = BigDecimal.valueOf(times);
         CubedInfo cubedInfo = cubedInfoRepository.findOne(someNumber);
         if (cubedInfo == null) {
-            cubedInfo = cubeAndStore(someNumber, bigDecimal);
+            cubedInfo = storeAndCacheCube(someNumber, bigDecimal);
         }
         return cubedInfo;
     }
