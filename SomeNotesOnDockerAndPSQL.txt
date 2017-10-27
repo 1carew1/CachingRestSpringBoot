@@ -44,8 +44,13 @@ portainer/portainer \
 # Docker Swarm Redis
 
 docker service create \
-  --replicas 1 \
+  --replicas 3 \
   --publish 6379:6379 \
   --name redisswarm \
   --update-delay 10s \
-  redis:4.0.2
+  --mount type=bind,src=/home/pi/CachingRestSpringBoot/redis/redis.conf,target=/usr/local/etc/redis/redis.conf \
+  redis:4.0.2 redis-server /usr/local/etc/redis/redis.conf
+
+# Old Fashioned way to run redis container
+
+ docker run -v /myredis/conf/redis.conf:/usr/local/etc/redis/redis.conf --name myredis redis:4.0.2 redis-server /usr/local/etc/redis/redis.conf
