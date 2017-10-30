@@ -44,7 +44,7 @@ portainer/portainer \
 # Docker Swarm Redis
 
 docker service create \
-  --replicas 3 \
+  --replicas 1 \
   --publish 6379:6379 \
   --name redisswarm \
   --update-delay 10s \
