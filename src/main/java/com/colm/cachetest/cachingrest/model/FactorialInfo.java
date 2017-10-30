@@ -4,20 +4,21 @@ package com.colm.cachetest.cachingrest.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.math.BigDecimal;
+import java.io.Serializable;
 
 @Entity
-public class FactorialInfo {
+public class FactorialInfo implements Serializable {
 
     @Id
     @Column (unique = true)
     private Long number;
-    private BigDecimal factorial;
+    @Column(columnDefinition="BLOB NOT NULL")
+    private String factorial;
 
     public FactorialInfo () {
     }
 
-    public FactorialInfo (Long number, BigDecimal factorial) {
+    public FactorialInfo (Long number, String factorial) {
         this.number = number;
         this.factorial = factorial;
     }
@@ -30,11 +31,11 @@ public class FactorialInfo {
         this.number = number;
     }
 
-    public BigDecimal getFactorial () {
+    public String getFactorial () {
         return factorial;
     }
 
-    public void setFactorial (BigDecimal factorial) {
+    public void setFactorial (String factorial) {
         this.factorial = factorial;
     }
 }

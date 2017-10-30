@@ -26,11 +26,11 @@ public class CubeDatabaseLoader implements CommandLineRunner {
 
     @Override
     public void run (String... string) throws Exception {
-        for (int i = 1; i <= 300; i++) {
-            long number = i;
-            BigDecimal bigDecimal = BigDecimal.valueOf(number * number * number);
-            log.info("Trying to put cube into cache : " + number + ", cube = " + bigDecimal);
-            cubedCacheService.storeAndCacheCube(number, bigDecimal);
-        }
+//        for (int i = 1; i <= 300; i++) {
+//            long number = i;
+//            BigDecimal bigDecimal = BigDecimal.valueOf(number * number * number);
+//            log.info("Trying to put cube into cache : " + number + ", cube = " + bigDecimal);
+//            cubedCacheService.storeAndCacheCube(number, bigDecimal);
+//        }
     }
 }
