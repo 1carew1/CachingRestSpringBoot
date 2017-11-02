@@ -3,6 +3,7 @@ package com.colm.cachetest.cachingrest.controller.api.v1;
 
 import com.colm.cachetest.cachingrest.model.CubedInfo;
 import com.colm.cachetest.cachingrest.model.FactorialInfo;
+import com.colm.cachetest.cachingrest.model.LabelWithProbability;
 import com.colm.cachetest.cachingrest.service.ClassifyImageService;
 import com.colm.cachetest.cachingrest.service.CubedCacheService;
 import com.colm.cachetest.cachingrest.service.FactorialCacheService;
@@ -47,7 +48,7 @@ public class CachingRestController {
 
     @PostMapping (value = "/classify")
     @CrossOrigin(origins = "*")
-    public ClassifyImageService.LabelWithProbability classifyImage(@RequestParam MultipartFile file) throws IOException {
+    public LabelWithProbability classifyImage(@RequestParam MultipartFile file) throws IOException {
         checkImageContents(file);
         return classifyImageService.classifyImage(file.getBytes());
     }

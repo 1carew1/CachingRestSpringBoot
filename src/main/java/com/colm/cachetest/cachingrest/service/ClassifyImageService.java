@@ -1,9 +1,5 @@
 package com.colm.cachetest.cachingrest.service;
-import com.colm.cachetest.cachingrest.repository.CubeDatabaseLoader;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.colm.cachetest.cachingrest.model.LabelWithProbability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +8,8 @@ import org.tensorflow.*;
 
 import java.util.Arrays;
 import java.util.List;
+
+//Source : https://github.com/michel-kraemer/gradle-download-task
 
 //Inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/java/src/main/java/org/tensorflow/examples/LabelImage.java
 @Service
@@ -155,14 +153,6 @@ public class ClassifyImageService {
         }
 
         private Graph g;
-    }
-
-    @Data
-    @NoArgsConstructor @AllArgsConstructor
-    public static class LabelWithProbability {
-        private String label;
-        private float probability;
-        private long elapsed;
     }
 }
 
