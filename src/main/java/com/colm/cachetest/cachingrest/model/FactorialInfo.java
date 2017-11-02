@@ -4,9 +4,11 @@ package com.colm.cachetest.cachingrest.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
+@Table (name = "factorial_info")
 public class FactorialInfo implements Serializable {
 
     @Id
