@@ -14,15 +14,14 @@ public class FactorialInfo implements Serializable {
     @Id
     @Column (unique = true)
     private Long number;
-    @Column(columnDefinition="BLOB NOT NULL")
-    private String factorial;
+    private String factorialString;
 
     public FactorialInfo () {
     }
 
     public FactorialInfo (Long number, String factorial) {
         this.number = number;
-        this.factorial = factorial;
+        this.factorialString = factorial;
     }
 
     public Long getNumber () {
@@ -34,10 +33,10 @@ public class FactorialInfo implements Serializable {
     }
 
     public String getFactorial () {
-        return factorial;
+        return factorialString;
     }
 
     public void setFactorial (String factorial) {
-        this.factorial = factorial;
+        this.factorialString = factorial;
     }
 }
