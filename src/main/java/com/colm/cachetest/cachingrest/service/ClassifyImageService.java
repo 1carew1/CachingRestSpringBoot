@@ -3,6 +3,7 @@ import com.colm.cachetest.cachingrest.model.LabelWithProbability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.tensorflow.*;
 
@@ -36,6 +37,7 @@ public class ClassifyImageService {
         this.scale = scale;
     }
 
+    @Cacheable(value = "imageClassifications")
     public LabelWithProbability classifyImage(byte[] imageBytes) {
         long start = System.currentTimeMillis();
         try (Tensor image = normalizedImageToTensor(imageBytes)) {

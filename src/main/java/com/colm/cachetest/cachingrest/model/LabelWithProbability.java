@@ -2,7 +2,9 @@ package com.colm.cachetest.cachingrest.model;
 
 import lombok.Data;
 
-public class LabelWithProbability {
+import java.io.Serializable;
+
+public class LabelWithProbability implements Serializable {
     private String label;
     private float probability;
     private long elapsed;
