@@ -55,7 +55,7 @@
                 var file = files[0]
                 var fd = new FormData();
                 fd.append('file', file);
-                $http.post('/api/classify', fd, {
+                $http.post('/api/v1/classify', fd, {
                         transformRequest: angular.identity,
                         headers: {'Content-Type': undefined}
                     }

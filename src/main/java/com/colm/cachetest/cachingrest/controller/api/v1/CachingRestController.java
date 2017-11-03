@@ -9,8 +9,6 @@ import com.colm.cachetest.cachingrest.service.CubedCacheService;
 import com.colm.cachetest.cachingrest.service.FactorialCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.sf.jmimemagic.Magic;
-import net.sf.jmimemagic.MagicMatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,15 +57,15 @@ public class CachingRestController {
     }
 
     private void checkImageContents(MultipartFile file) {
-        MagicMatch match;
-        try {
-            match = Magic.getMagicMatch(file.getBytes());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        String mimeType = match.getMimeType();
-        if (!mimeType.startsWith("image")) {
-            throw new IllegalArgumentException("Not an image type: " + mimeType);
-        }
+//        MagicMatch match;
+//        try {
+//            match = Magic.getMagicMatch(file.getBytes());
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        String mimeType = match.getMimeType();
+//        if (!mimeType.startsWith("image")) {
+//            throw new IllegalArgumentException("Not an image type: " + mimeType);
+//        }
     }
 }
