@@ -60,9 +60,9 @@ public class CachingRestController {
 
         byte[] uploadBytes = file.getBytes();
 
-        String hashOfImages = ImageUtils.obtainHashOfByeArray(uploadBytes);
-
-        return classifyImageService.classifyImage(uploadBytes, hashOfImages);
+        String hashOfImage = ImageUtils.obtainHashOfByeArray(uploadBytes);
+        log.info("Classifying Image of Hash : " + hashOfImage);
+        return classifyImageService.classifyImage(uploadBytes, hashOfImage);
     }
 
     @RequestMapping(value = "/")

@@ -22,8 +22,10 @@ public class ClassifyImageService {
     private final List<String> labels;
     private final String outputLayer;
 
-    private  int W, H;
-    private float mean, scale;
+    private  int width;
+    private int height;
+    private float mean;
+    private float scale;
 
     public ClassifyImageService(Graph inceptionGraph, List<String> labels, @Value("${tf.outputLayer}") String outputLayer,
                                 @Value("${tf.image.width}") int imageW, @Value("${tf.image.height}") int imageH,
@@ -31,22 +33,18 @@ public class ClassifyImageService {
         this.inceptionGraph = inceptionGraph;
         this.labels = labels;
         this.outputLayer = outputLayer;
-        this.H = imageH;
-        this.W = imageW;
+        this.height = imageH;
+        this.width = imageW;
         this.mean = mean;
         this.scale = scale;
     }
 
     @Cacheable(value = "imageClassifications", key = "#imageHash")
     public LabelWithProbability classifyImage(byte[] imageBytes, String imageHash) {
-        long start = System.currentTimeMillis();
         try (Tensor image = normalizedImageToTensor(imageBytes)) {
             float[] labelProbabilities = classifyImageProbabilities(image);
             int bestLabelIdx = maxIndex(labelProbabilities);
-            LabelWithProbability labelWithProbability =
-                    new LabelWithProbability(labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f, System.currentTimeMillis() -  start);
-            log.debug(String.format("Image classification [%s %.2f%%] took %d ms", labelWithProbability.getLabel(), labelWithProbability.getProbability(), labelWithProbability.getElapsed()));
-            return labelWithProbability;
+            return new LabelWithProbability(labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f);
         }
     }
 
@@ -98,7 +96,7 @@ public class ClassifyImageService {
                                             b.expandDims(
                                                     b.cast(b.decodeJpeg(input, 3), DataType.FLOAT),
                                                     b.constant("make_batch", 0)),
-                                            b.constant("size", new int[] {H, W})),
+                                            b.constant("size", new int[] {height, width})),
                                     b.constant("mean", mean)),
                             b.constant("scale", scale));
             try (Session s = new Session(g)) {

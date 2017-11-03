@@ -7,12 +7,10 @@ import java.io.Serializable;
 public class LabelWithProbability implements Serializable {
     private String label;
     private float probability;
-    private long elapsed;
 
-    public LabelWithProbability (String s, float v, long l) {
-        this.label = s;
-        this.probability = v;
-        this.elapsed = l;
+    public LabelWithProbability (String label, float probability) {
+        this.label = label;
+        this.probability = probability;
     }
 
     public String getLabel () {
@@ -29,13 +27,5 @@ public class LabelWithProbability implements Serializable {
 
     public void setProbability (float probability) {
         this.probability = probability;
-    }
-
-    public long getElapsed () {
-        return elapsed;
-    }
-
-    public void setElapsed (long elapsed) {
-        this.elapsed = elapsed;
     }
 }
