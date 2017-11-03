@@ -2,7 +2,12 @@ package com.colm.cachetest.cachingrest.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
@@ -20,5 +25,15 @@ public class ImageUtils {
             log.error("Error getting hash of byte array", e);
         }
         return hashString;
+    }
+
+    public static void verifyMultipartFileIsImage(MultipartFile file) {
+        try {
+            byte[] imageByters = file.getBytes();
+            InputStream myInputStream = new ByteArrayInputStream(imageByters);
+            BufferedImage bufferedImage = ImageIO.read(myInputStream);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -8,21 +8,13 @@ import com.colm.cachetest.cachingrest.service.ClassifyImageService;
 import com.colm.cachetest.cachingrest.service.CubedCacheService;
 import com.colm.cachetest.cachingrest.service.FactorialCacheService;
 import com.colm.cachetest.cachingrest.utils.ImageUtils;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sun.misc.BASE64Encoder;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.*;
 
 @RestController
 @RequestMapping ("/api/v1")
@@ -54,32 +46,19 @@ public class CachingRestController {
     }
 
     @PostMapping (value = "/classify")
-    @CrossOrigin(origins = "*")
-    public LabelWithProbability classifyImage(@RequestParam MultipartFile file) throws IOException, NoSuchAlgorithmException {
-        checkImageContents(file);
-
+    @CrossOrigin (origins = "*")
+    public LabelWithProbability classifyImage (@RequestParam MultipartFile file) throws IOException {
+        ImageUtils.verifyMultipartFileIsImage(file);
         byte[] uploadBytes = file.getBytes();
-
         String hashOfImage = ImageUtils.obtainHashOfByeArray(uploadBytes);
         log.info("Classifying Image of Hash : " + hashOfImage);
-        return classifyImageService.classifyImage(uploadBytes, hashOfImage);
+        LabelWithProbability labelWithProbability = classifyImageService.classifyImage(uploadBytes, hashOfImage);
+        log.info("Classidied The image");
+        return labelWithProbability;
     }
 
-    @RequestMapping(value = "/")
-    public String index() {
+    @RequestMapping (value = "/")
+    public String index () {
         return "index";
-    }
-
-    private void checkImageContents(MultipartFile file) {
-//        MagicMatch match;
-//        try {
-//            match = Magic.getMagicMatch(file.getBytes());
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        String mimeType = match.getMimeType();
-//        if (!mimeType.startsWith("image")) {
-//            throw new IllegalArgumentException("Not an image type: " + mimeType);
-//        }
     }
 }
