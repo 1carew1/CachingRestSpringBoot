@@ -7,13 +7,22 @@ import com.colm.cachetest.cachingrest.model.LabelWithProbability;
 import com.colm.cachetest.cachingrest.service.ClassifyImageService;
 import com.colm.cachetest.cachingrest.service.CubedCacheService;
 import com.colm.cachetest.cachingrest.service.FactorialCacheService;
+import com.colm.cachetest.cachingrest.utils.ImageUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping ("/api/v1")
@@ -46,9 +55,14 @@ public class CachingRestController {
 
     @PostMapping (value = "/classify")
     @CrossOrigin(origins = "*")
-    public LabelWithProbability classifyImage(@RequestParam MultipartFile file) throws IOException {
+    public LabelWithProbability classifyImage(@RequestParam MultipartFile file) throws IOException, NoSuchAlgorithmException {
         checkImageContents(file);
-        return classifyImageService.classifyImage(file.getBytes());
+
+        byte[] uploadBytes = file.getBytes();
+
+        String hashOfImages = ImageUtils.obtainHashOfByeArray(uploadBytes);
+
+        return classifyImageService.classifyImage(uploadBytes, hashOfImages);
     }
 
     @RequestMapping(value = "/")
