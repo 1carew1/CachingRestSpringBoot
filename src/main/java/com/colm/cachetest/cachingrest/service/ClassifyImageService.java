@@ -10,7 +10,7 @@ import org.tensorflow.*;
 import java.util.Arrays;
 import java.util.List;
 
-//Source : https://github.com/michel-kraemer/gradle-download-task
+//Source : https://github.com/florind/inception-serving-sb
 
 //Inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/java/src/main/java/org/tensorflow/examples/LabelImage.java
 @Service
