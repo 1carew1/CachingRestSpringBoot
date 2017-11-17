@@ -48,12 +48,15 @@ public class CachingRestController {
     @PostMapping (value = "/classify")
     @CrossOrigin (origins = "*")
     public LabelWithProbability classifyImage (@RequestParam MultipartFile file) throws IOException {
-        ImageUtils.verifyMultipartFileIsImage(file);
-        byte[] uploadBytes = file.getBytes();
-        String hashOfImage = ImageUtils.obtainHashOfByeArray(uploadBytes);
-        log.info("Classifying Image of Hash : " + hashOfImage);
-        LabelWithProbability labelWithProbability = classifyImageService.classifyImage(uploadBytes, hashOfImage);
-        log.info("Classidied The image");
+        boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
+        LabelWithProbability labelWithProbability = new LabelWithProbability("Bad Image", 1);
+        if (validImage) {
+            byte[] uploadBytes = file.getBytes();
+            String hashOfImage = ImageUtils.obtainHashOfByeArray(uploadBytes);
+            log.info("Classifying Image of Hash : " + hashOfImage);
+            labelWithProbability = classifyImageService.classifyImage(uploadBytes, hashOfImage);
+            log.info("Classidied The image");
+        }
         return labelWithProbability;
     }
 

@@ -15,25 +15,29 @@ public class ImageUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
 
-    public static String obtainHashOfByeArray(byte[] byteArray) {
+    public static String obtainHashOfByeArray (byte[] byteArray) {
         String hashString = null;
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] digest = md5.digest(byteArray);
             hashString = new BigInteger(1, digest).toString(16);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Error getting hash of byte array", e);
         }
         return hashString;
     }
 
-    public static void verifyMultipartFileIsImage(MultipartFile file) {
+    public static boolean verifyMultipartFileIsImage (MultipartFile file) {
+        BufferedImage bufferedImage = null;
         try {
             byte[] imageByters = file.getBytes();
             InputStream myInputStream = new ByteArrayInputStream(imageByters);
-            BufferedImage bufferedImage = ImageIO.read(myInputStream);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            bufferedImage = ImageIO.read(myInputStream);
         }
+        catch (Exception e) {
+            log.error("Cannot be converted to image", e);
+        }
+        return bufferedImage != null;
     }
 }
