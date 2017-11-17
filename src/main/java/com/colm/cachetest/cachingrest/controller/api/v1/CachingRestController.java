@@ -49,7 +49,7 @@ public class CachingRestController {
     @CrossOrigin (origins = "*")
     public LabelWithProbability classifyImage (@RequestParam MultipartFile file) throws IOException {
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
-        LabelWithProbability labelWithProbability = new LabelWithProbability("Bad Image", 1);
+        LabelWithProbability labelWithProbability = new LabelWithProbability("Unsupported Image Type", 100);
         if (validImage) {
             byte[] uploadBytes = file.getBytes();
             String hashOfImage = ImageUtils.obtainHashOfByeArray(uploadBytes);
