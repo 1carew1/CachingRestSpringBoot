@@ -3,6 +3,7 @@ import com.colm.cachetest.cachingrest.model.LabelWithProbability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.tensorflow.*;
@@ -45,6 +46,18 @@ public class ClassifyImageService {
             float[] labelProbabilities = classifyImageProbabilities(image);
             int bestLabelIdx = maxIndex(labelProbabilities);
             return new LabelWithProbability(labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f);
+        }
+    }
+
+    @Cacheable(value = "imageClassifications", key = "#imageHash")
+    public LabelWithProbability checkIfInCache(String imageHash){
+        return null;
+    }
+
+    @CacheEvict(value = "imageClassifications", key = "#imageHash")
+    public void evictFromCache(String imageHash){
+        if(imageHash == null || imageHash.equals("")){
+            throw  new UnsupportedOperationException();
         }
     }
 
