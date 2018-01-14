@@ -83,7 +83,7 @@ Init()
 	aspect_ratio=''
 	image_type=''
 	input_pathfile=''
-	output_path=$colms_choice
+	output_path="../images/$colms_choice"
 	links_only=false
 	dimensions=''
 
