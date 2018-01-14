@@ -25,7 +25,7 @@ public class CachingRestController {
 
     @PostMapping (value = "/classify")
     @CrossOrigin (origins = "*")
-    public LabelWithProbability classifyImage (@RequestParam MultipartFile file) throws IOException {
+    public LabelWithProbability classifyImage (@RequestBody MultipartFile file) throws IOException {
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
         LabelWithProbability labelWithProbability = new LabelWithProbability("Unsupported Image Type", 100);
         if (validImage) {
