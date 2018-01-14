@@ -1,6 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 import requests
+from requests.exceptions import ConnectionError
 import random
 
 # Constants
@@ -26,5 +27,5 @@ for imageLocation in imageLocations :
         response = requests.post(endpoint_url, files=files)
         print(imageLocation)
         print(response.content)
-    except :
+    except ConnectionError:
         print("Issue Posting : " + imageLocation + " to " + endpoint_url)
