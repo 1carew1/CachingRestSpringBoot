@@ -1,7 +1,5 @@
 package com.colm.cachetest.cachingrest.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
 public class LabelWithProbability implements Serializable {
