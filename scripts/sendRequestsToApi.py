@@ -25,6 +25,7 @@ for smallDir in onlyDirs :
 # Obtain a random image a post to the endpoint
 #random_photo = random.choice(imageLocations)
 
+number_of_images_processed=0
 # Send each image to the endpoint
 for imageLocation in imageLocations :
     statinfo = os.stat(imageLocation)
@@ -33,12 +34,12 @@ for imageLocation in imageLocations :
         file = open(imageLocation, 'rb')
         file_contents = file.read()
         files = {'file': (imageLocation, file_contents)}
+        number_of_images_processed = number_of_images_processed + 1
         try :
             response = requests.post(endpoint_url, files=files)
             #print(imageLocation)
             #print(response.content)
         except ConnectionError:
-            print(imageLocation)
             print("Issue Posting : " + imageLocation + " to " + endpoint_url)
 
 script_end = datetime.datetime.now()
@@ -46,4 +47,5 @@ print("Finish Time : " + str(script_end))
 time_diff = script_end - script_start
 time_diff_seconds = int(time_diff.total_seconds())
 time_diff_minutes = time_diff_seconds / 60
-print("Total time to run : " + time_diff_minutes + " minutes")
+print("Total time to run : " + str(time_diff_minutes) + " minutes")
+print("Number of Images Processed : " + str(number_of_images_processed))
