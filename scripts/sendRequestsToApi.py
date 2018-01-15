@@ -1,6 +1,7 @@
 from os import listdir
 from os.path import isfile, join
 import requests
+import os
 from requests.exceptions import ConnectionError
 import random
 
@@ -22,12 +23,16 @@ for smallDir in onlyDirs :
 
 # Send each image to the endpoint
 for imageLocation in imageLocations :
-    file = open(imageLocation, 'rb')
-    file_contents = file.read()
-    files = {'file': ("file", file_contents)}
-    try :
-        response = requests.post(endpoint_url, files=files)
-        print(imageLocation)
-        print(response.content)
-    except ConnectionError:
-        print("Issue Posting : " + imageLocation + " to " + endpoint_url)
+    statinfo = os.stat(imageLocation)
+    # Ensure the images are not gif and are small enough to send
+    if statinfo.st_size < 10485760 and "gif" not in imageLocation :
+        file = open(imageLocation, 'rb')
+        file_contents = file.read()
+        files = {'file': ("file", file_contents)}
+        try :
+            response = requests.post(endpoint_url, files=files)
+            #print(imageLocation)
+            #print(response.content)
+        except ConnectionError:
+            print(imageLocation)
+            print("Issue Posting : " + imageLocation + " to " + endpoint_url)
