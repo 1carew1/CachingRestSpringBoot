@@ -21,11 +21,10 @@ public class CachePerformanceSaver implements Runnable {
     @Override
     public void run () {
         if (cachePerformance != null && cachePerformanceRepository != null) {
-            log.info("Saving Cache Performance to DB");
             cachePerformanceRepository.save(cachePerformance);
         }
         else {
-            log.info("Cache Performance object is null");
+            log.info("Cache Performance object is null so cannot save");
         }
     }
 }
