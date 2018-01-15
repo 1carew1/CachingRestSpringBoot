@@ -3,7 +3,7 @@ package com.colm.cachetest.cachingrest.controller.api.v1;
 
 import com.colm.cachetest.cachingrest.model.CachePerformance;
 import com.colm.cachetest.cachingrest.model.LabelWithProbability;
-import com.colm.cachetest.cachingrest.repository.CacherPerformanceRepository;
+import com.colm.cachetest.cachingrest.service.AsynchDBService;
 import com.colm.cachetest.cachingrest.service.ClassifyImageService;
 import com.colm.cachetest.cachingrest.utils.ImageUtils;
 import org.slf4j.Logger;
@@ -21,10 +21,10 @@ public class CachingRestController {
 
     private static final Logger log = LoggerFactory.getLogger(CachingRestController.class);
     @Autowired
-    private CacherPerformanceRepository cacherPerformanceRepository;
-
-    @Autowired
     private ClassifyImageService classifyImageService;
+    @Autowired
+    private AsynchDBService asynchDBService;
+
 
     @PostMapping (value = "/classify")
     @CrossOrigin (origins = "*")
@@ -52,7 +52,7 @@ public class CachingRestController {
             }
             CachePerformance cachePerformance = new CachePerformance(startDate, endDate, imageHash, cacheHit);
             // Some service that will store this
-            cacherPerformanceRepository.save(cachePerformance);
+            asynchDBService.savedCachePerformance(cachePerformance);
         }
         return labelWithProbability;
     }

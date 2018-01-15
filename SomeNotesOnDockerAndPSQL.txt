@@ -16,6 +16,11 @@ docker exec -it postgresdb su postgres -c 'psql'
 \dt
 select * from cache_performance;
 
+# Get the time difference in ms
+select id, cache_hit, image_hash,
+    (extract(epoch from finish_date) - extract(epoch from start_date))*1000 as timeDiffms, start_date, finish_date
+    from cache_performance;
+
 docker run --name spring_app_container \
 --link postgresdb:postgresdb \
 -p 8080:8080 \

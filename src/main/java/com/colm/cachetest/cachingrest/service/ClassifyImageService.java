@@ -43,6 +43,7 @@ public class ClassifyImageService {
     @Cacheable(value = "imageClassifications", key = "#imageHash")
     public LabelWithProbability classifyImage(byte[] imageBytes, String imageHash) {
         try (Tensor image = normalizedImageToTensor(imageBytes)) {
+            log.info("Trying to classify image");
             float[] labelProbabilities = classifyImageProbabilities(image);
             int bestLabelIdx = maxIndex(labelProbabilities);
             return new LabelWithProbability(labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f);
