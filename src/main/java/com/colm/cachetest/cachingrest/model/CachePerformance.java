@@ -9,23 +9,25 @@ import java.util.Date;
 public class CachePerformance implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue (strategy = GenerationType.AUTO)
+    @Column (name = "id", updatable = false, nullable = false)
     private Long id;
     private Date startDate;
     private Date finishDate;
     private String imageHash;
     private Boolean cacheHit;
+    private String fileName;
 
     public CachePerformance () {
 
     }
 
-    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit) {
+    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName) {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.imageHash = imageHash;
         this.cacheHit = cacheHit;
+        this.fileName = fileName;
     }
 
     public Date getStartDate () {
@@ -62,5 +64,13 @@ public class CachePerformance implements Serializable {
 
     public Long getId () {
         return id;
+    }
+
+    public String getFileName () {
+        return fileName;
+    }
+
+    public void setFileName (String fileName) {
+        this.fileName = fileName;
     }
 }

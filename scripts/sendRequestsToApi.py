@@ -1,9 +1,13 @@
-from os import listdir
-from os.path import isfile, join
 import requests
 import os
+import datetime
+from os import listdir
+from os.path import isfile, join
 from requests.exceptions import ConnectionError
 import random
+
+script_start = datetime.datetime.now()
+print("Start Time : " + str(script_start))
 
 # Constants
 endpoint_url = "http://localhost:8080/api/v1/classify"
@@ -28,7 +32,7 @@ for imageLocation in imageLocations :
     if statinfo.st_size < 10485760 and "gif" not in imageLocation :
         file = open(imageLocation, 'rb')
         file_contents = file.read()
-        files = {'file': ("file", file_contents)}
+        files = {'file': (imageLocation, file_contents)}
         try :
             response = requests.post(endpoint_url, files=files)
             #print(imageLocation)
@@ -36,3 +40,10 @@ for imageLocation in imageLocations :
         except ConnectionError:
             print(imageLocation)
             print("Issue Posting : " + imageLocation + " to " + endpoint_url)
+
+script_end = datetime.datetime.now()
+print("Finish Time : " + str(script_end))
+time_diff = script_end - script_start
+time_diff_seconds = int(time_diff.total_seconds())
+time_diff_minutes = time_diff_seconds / 60
+print("Total time to run : " + time_diff_minutes + " minutes")

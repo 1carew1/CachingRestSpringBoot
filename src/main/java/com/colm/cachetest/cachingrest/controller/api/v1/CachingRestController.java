@@ -32,6 +32,7 @@ public class CachingRestController {
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
         LabelWithProbability labelWithProbability = new LabelWithProbability("Unsupported Image Type", 100);
         if (validImage) {
+            String fileName = file.getOriginalFilename();
             byte[] uploadBytes = file.getBytes();
             String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
             // Get time to pull from Cache
@@ -50,7 +51,7 @@ public class CachingRestController {
                 labelWithProbability = classifyImageService.classifyImage(uploadBytes, imageHash);
                 endDate = new Date();
             }
-            CachePerformance cachePerformance = new CachePerformance(startDate, endDate, imageHash, cacheHit);
+            CachePerformance cachePerformance = new CachePerformance(startDate, endDate, imageHash, cacheHit, fileName);
             // Some service that will store this
             asynchDBService.savedCachePerformance(cachePerformance);
         }
