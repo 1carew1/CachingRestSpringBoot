@@ -9,6 +9,13 @@ ALTER ROLE dbuser CREATEDB;
 CREATE database cachetest;
 
 
+# Go to db
+docker exec -it postgresdb su postgres -c 'psql'
+\password postgres
+\c cachetest;
+\dt
+select * from cache_performance;
+
 docker run --name spring_app_container \
 --link postgresdb:postgresdb \
 -p 8080:8080 \

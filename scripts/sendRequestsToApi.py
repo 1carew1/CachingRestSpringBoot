@@ -22,7 +22,9 @@ for smallDir in onlyDirs :
 
 # Send each image to the endpoint
 for imageLocation in imageLocations :
-    files = {'file': ("file", open(imageLocation, 'r'))}
+    file = open(imageLocation, 'rb')
+    file_contents = file.read()
+    files = {'file': ("file", file_contents)}
     try :
         response = requests.post(endpoint_url, files=files)
         print(imageLocation)

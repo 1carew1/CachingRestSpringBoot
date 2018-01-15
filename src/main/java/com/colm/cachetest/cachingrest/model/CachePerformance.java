@@ -1,10 +1,17 @@
 package com.colm.cachetest.cachingrest.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@Entity
+@Table (name = "cache_performance")
 public class CachePerformance implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
     private Date startDate;
     private Date finishDate;
     private String imageHash;
@@ -51,5 +58,9 @@ public class CachePerformance implements Serializable {
 
     public void setCacheHit (Boolean cacheHit) {
         this.cacheHit = cacheHit;
+    }
+
+    public Long getId () {
+        return id;
     }
 }
