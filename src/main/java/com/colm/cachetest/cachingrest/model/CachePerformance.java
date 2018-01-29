@@ -85,4 +85,8 @@ public class CachePerformance{
     public void setElapsedTimeInns(Long elapsedTimeInns) {
         this.elapsedTimeInns = elapsedTimeInns;
     }
+
+    public CacheTestingBatch getCacheTestingBatch() {
+        return cacheTestingBatch;
+    }
 }

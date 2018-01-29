@@ -29,13 +29,14 @@ public class CachingRestController {
     @Autowired
     private CacheTestingBatchService cacheTestingBatchService;
 
-
+    // create a batch
     @PostMapping(value = "/batch")
     @CrossOrigin(origins = "*")
     public CacheTestingBatch createBatch() {
         return cacheTestingBatchService.createBatch();
     }
 
+    // For classifying the image with performance measurement
     @PostMapping(value = "/classify/{batchId}")
     @CrossOrigin(origins = "*")
     public ClassifiedImage classifyImage(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
@@ -74,6 +75,21 @@ public class CachingRestController {
                     cacheTestingBatch);
             // Some service that will store this
             asynchDBService.savedCachePerformance(cachePerformance);
+        }
+        return classifiedImage;
+    }
+
+    // For classifying the image with no performance measurement
+    @PostMapping(value = "/classify")
+    @CrossOrigin(origins = "*")
+    public ClassifiedImage classifyImage(@RequestBody MultipartFile file) throws IOException {
+        boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
+        ClassifiedImage classifiedImage = new ClassifiedImage("Unsupported Image Type", 100, null);
+        if (validImage) {
+            byte[] uploadBytes = file.getBytes();
+            String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
+            log.info("No Performance Measuring. Classifying Image of Hash : {}", imageHash);
+            classifiedImage = classifyImageService.classifyImage(uploadBytes, imageHash);
         }
         return classifiedImage;
     }
