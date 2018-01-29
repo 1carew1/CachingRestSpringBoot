@@ -1,7 +1,5 @@
 package com.colm.cachetest.cachingrest.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.util.Date;
 

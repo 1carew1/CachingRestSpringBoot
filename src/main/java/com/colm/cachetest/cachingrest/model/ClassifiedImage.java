@@ -28,4 +28,12 @@ public class ClassifiedImage implements Serializable {
     public void setProbability(float probability) {
         this.probability = probability;
     }
+
+    public byte[] getImageDataPoints() {
+        return imageDataPoints;
+    }
+
+    public void setImageDataPoints(byte[] imageDataPoints) {
+        this.imageDataPoints = imageDataPoints;
+    }
 }
