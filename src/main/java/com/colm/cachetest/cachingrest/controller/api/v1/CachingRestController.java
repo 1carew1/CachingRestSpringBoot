@@ -58,7 +58,7 @@ public class CachingRestController {
                 cacheHit = true;
             } else {
                 classifyImageService.evictFromCache(imageHash);
-                log.info("Classifying Image of Hash : {}", imageHash);
+                log.info("Batch {}. Classifying Image of Hash : {}", batchId, imageHash);
                 // Get time to process Image
                 startDate = new Date();
                 nanoTimeStart = System.nanoTime();
