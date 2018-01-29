@@ -17,17 +17,19 @@ public class CachePerformance implements Serializable {
     private String imageHash;
     private Boolean cacheHit;
     private String fileName;
+    private Long elapsedTimeInns;
 
     public CachePerformance () {
 
     }
 
-    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName) {
+    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName, Long elapsedTimeInns) {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.imageHash = imageHash;
         this.cacheHit = cacheHit;
         this.fileName = fileName;
+        this.elapsedTimeInns = elapsedTimeInns;
     }
 
     public Date getStartDate () {

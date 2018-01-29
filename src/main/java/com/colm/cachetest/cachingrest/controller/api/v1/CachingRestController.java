@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Date;
 
 @RestController
-@RequestMapping ("/api/v1")
+@RequestMapping("/api/v1")
 public class CachingRestController {
 
     private static final Logger log = LoggerFactory.getLogger(CachingRestController.class);
@@ -26,9 +26,9 @@ public class CachingRestController {
     private AsynchDBService asynchDBService;
 
 
-    @PostMapping (value = "/classify")
-    @CrossOrigin (origins = "*")
-    public LabelWithProbability classifyImage (@RequestBody MultipartFile file) throws IOException {
+    @PostMapping(value = "/classify")
+    @CrossOrigin(origins = "*")
+    public LabelWithProbability classifyImage(@RequestBody MultipartFile file) throws IOException {
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
         LabelWithProbability labelWithProbability = new LabelWithProbability("Unsupported Image Type", 100);
         if (validImage) {
@@ -37,29 +37,32 @@ public class CachingRestController {
             String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
             // Get time to pull from Cache
             Date startDate = new Date();
+            long nanoTimeStart = System.nanoTime();
             labelWithProbability = classifyImageService.checkIfInCache(imageHash);
+            long nanoTimeEnd = System.nanoTime();
             Date endDate = new Date();
             boolean cacheHit = false;
             if (labelWithProbability != null) {
                 cacheHit = true;
-            }
-            else {
+            } else {
                 classifyImageService.evictFromCache(imageHash);
                 log.info("Classifying Image of Hash : {}", imageHash);
                 // Get time to process Image
                 startDate = new Date();
+                nanoTimeStart = System.nanoTime();
                 labelWithProbability = classifyImageService.classifyImage(uploadBytes, imageHash);
+                nanoTimeEnd = System.nanoTime();
                 endDate = new Date();
             }
-            CachePerformance cachePerformance = new CachePerformance(startDate, endDate, imageHash, cacheHit, fileName);
+            CachePerformance cachePerformance = new CachePerformance(startDate, endDate, imageHash, cacheHit, fileName, nanoTimeEnd - nanoTimeStart);
             // Some service that will store this
             asynchDBService.savedCachePerformance(cachePerformance);
         }
         return labelWithProbability;
     }
 
-    @RequestMapping (value = "/")
-    public String index () {
+    @RequestMapping(value = "/")
+    public String index() {
         return "index";
     }
 }
