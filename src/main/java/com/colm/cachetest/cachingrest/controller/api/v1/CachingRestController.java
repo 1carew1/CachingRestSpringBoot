@@ -2,7 +2,7 @@ package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
 import com.colm.cachetest.cachingrest.model.CachePerformance;
-import com.colm.cachetest.cachingrest.model.LabelWithProbability;
+import com.colm.cachetest.cachingrest.model.ClassifiedImage;
 import com.colm.cachetest.cachingrest.service.AsynchDBService;
 import com.colm.cachetest.cachingrest.service.ClassifyImageService;
 import com.colm.cachetest.cachingrest.utils.ImageUtils;
@@ -28,9 +28,9 @@ public class CachingRestController {
 
     @PostMapping(value = "/classify")
     @CrossOrigin(origins = "*")
-    public LabelWithProbability classifyImage(@RequestBody MultipartFile file) throws IOException {
+    public ClassifiedImage classifyImage(@RequestBody MultipartFile file) throws IOException {
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
-        LabelWithProbability labelWithProbability = new LabelWithProbability("Unsupported Image Type", 100);
+        ClassifiedImage classifiedImage = new ClassifiedImage("Unsupported Image Type", 100, null);
         if (validImage) {
             String fileName = file.getOriginalFilename();
             byte[] uploadBytes = file.getBytes();
@@ -38,11 +38,11 @@ public class CachingRestController {
             // Get time to pull from Cache
             Date startDate = new Date();
             long nanoTimeStart = System.nanoTime();
-            labelWithProbability = classifyImageService.checkIfInCache(imageHash);
+            classifiedImage = classifyImageService.checkIfInCache(imageHash);
             long nanoTimeEnd = System.nanoTime();
             Date endDate = new Date();
             boolean cacheHit = false;
-            if (labelWithProbability != null) {
+            if (classifiedImage != null) {
                 cacheHit = true;
             } else {
                 classifyImageService.evictFromCache(imageHash);
@@ -50,7 +50,7 @@ public class CachingRestController {
                 // Get time to process Image
                 startDate = new Date();
                 nanoTimeStart = System.nanoTime();
-                labelWithProbability = classifyImageService.classifyImage(uploadBytes, imageHash);
+                classifiedImage = classifyImageService.classifyImage(uploadBytes, imageHash);
                 nanoTimeEnd = System.nanoTime();
                 endDate = new Date();
             }
@@ -58,7 +58,7 @@ public class CachingRestController {
             // Some service that will store this
             asynchDBService.savedCachePerformance(cachePerformance);
         }
-        return labelWithProbability;
+        return classifiedImage;
     }
 
     @RequestMapping(value = "/")

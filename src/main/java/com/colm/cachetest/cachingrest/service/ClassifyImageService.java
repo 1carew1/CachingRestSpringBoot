@@ -1,5 +1,5 @@
 package com.colm.cachetest.cachingrest.service;
-import com.colm.cachetest.cachingrest.model.LabelWithProbability;
+import com.colm.cachetest.cachingrest.model.ClassifiedImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,16 +41,16 @@ public class ClassifyImageService {
     }
 
     @Cacheable(value = "imageClassifications", key = "#imageHash")
-    public LabelWithProbability classifyImage(byte[] imageBytes, String imageHash) {
+    public ClassifiedImage classifyImage(byte[] imageBytes, String imageHash) {
         try (Tensor image = normalizedImageToTensor(imageBytes)) {
             float[] labelProbabilities = classifyImageProbabilities(image);
             int bestLabelIdx = maxIndex(labelProbabilities);
-            return new LabelWithProbability(labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f);
+            return new ClassifiedImage(labels.get(bestLabelIdx), labelProbabilities[bestLabelIdx] * 100f, imageBytes);
         }
     }
 
     @Cacheable(value = "imageClassifications", key = "#imageHash")
-    public LabelWithProbability checkIfInCache(String imageHash){
+    public ClassifiedImage checkIfInCache(String imageHash){
         return null;
     }
 
