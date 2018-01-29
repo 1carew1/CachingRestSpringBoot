@@ -2,8 +2,10 @@ package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
 import com.colm.cachetest.cachingrest.model.CachePerformance;
+import com.colm.cachetest.cachingrest.model.CacheTestingBatch;
 import com.colm.cachetest.cachingrest.model.ClassifiedImage;
 import com.colm.cachetest.cachingrest.service.AsynchDBService;
+import com.colm.cachetest.cachingrest.service.CacheTestingBatchService;
 import com.colm.cachetest.cachingrest.service.ClassifyImageService;
 import com.colm.cachetest.cachingrest.utils.ImageUtils;
 import org.slf4j.Logger;
@@ -24,14 +26,23 @@ public class CachingRestController {
     private ClassifyImageService classifyImageService;
     @Autowired
     private AsynchDBService asynchDBService;
+    @Autowired
+    private CacheTestingBatchService cacheTestingBatchService;
 
 
-    @PostMapping(value = "/classify")
+    @PostMapping(value = "/batch")
     @CrossOrigin(origins = "*")
-    public ClassifiedImage classifyImage(@RequestBody MultipartFile file) throws IOException {
+    public CacheTestingBatch createBatch() {
+        return cacheTestingBatchService.createBatch();
+    }
+
+    @PostMapping(value = "/classify/{batchId}")
+    @CrossOrigin(origins = "*")
+    public ClassifiedImage classifyImage(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
+        CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
         ClassifiedImage classifiedImage = new ClassifiedImage("Unsupported Image Type", 100, null);
-        if (validImage) {
+        if (validImage && cacheTestingBatch != null) {
             String fileName = file.getOriginalFilename();
             byte[] uploadBytes = file.getBytes();
             String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
@@ -54,7 +65,13 @@ public class CachingRestController {
                 nanoTimeEnd = System.nanoTime();
                 endDate = new Date();
             }
-            CachePerformance cachePerformance = new CachePerformance(startDate, endDate, imageHash, cacheHit, fileName, nanoTimeEnd - nanoTimeStart);
+            CachePerformance cachePerformance = new CachePerformance(startDate,
+                    endDate,
+                    imageHash,
+                    cacheHit,
+                    fileName,
+                    nanoTimeEnd - nanoTimeStart,
+                    cacheTestingBatch);
             // Some service that will store this
             asynchDBService.savedCachePerformance(cachePerformance);
         }

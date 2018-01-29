@@ -1,12 +1,13 @@
 package com.colm.cachetest.cachingrest.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table (name = "cache_performance")
-public class CachePerformance implements Serializable {
+public class CachePerformance{
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
@@ -18,18 +19,21 @@ public class CachePerformance implements Serializable {
     private Boolean cacheHit;
     private String fileName;
     private Long elapsedTimeInns;
+    @ManyToOne
+    @JoinColumn (name="batch_id")
+    private CacheTestingBatch cacheTestingBatch;
 
     public CachePerformance () {
-
     }
 
-    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName, Long elapsedTimeInns) {
+    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName, Long elapsedTimeInns, CacheTestingBatch cacheTestingBatch) {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.imageHash = imageHash;
         this.cacheHit = cacheHit;
         this.fileName = fileName;
         this.elapsedTimeInns = elapsedTimeInns;
+        this.cacheTestingBatch = cacheTestingBatch;
     }
 
     public Date getStartDate () {
@@ -74,5 +78,13 @@ public class CachePerformance implements Serializable {
 
     public void setFileName (String fileName) {
         this.fileName = fileName;
+    }
+
+    public Long getElapsedTimeInns() {
+        return elapsedTimeInns;
+    }
+
+    public void setElapsedTimeInns(Long elapsedTimeInns) {
+        this.elapsedTimeInns = elapsedTimeInns;
     }
 }

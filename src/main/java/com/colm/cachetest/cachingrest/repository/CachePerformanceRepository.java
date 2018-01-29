@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface CachePerformanceRepository extends JpaRepository<CachePerformance, Long> {
 
     @Query ("SELECT c FROM CachePerformance c WHERE c.id=?1")
-    public CachePerformance findOne (Long number);
+    public CachePerformance findOne (Long id);
 }
 
