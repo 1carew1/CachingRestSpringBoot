@@ -16,8 +16,8 @@ public class CacheTestingBatchService {
         return cacheTestingBatchRepository.findOne(id);
     }
 
-    public CacheTestingBatch createBatch() {
-        CacheTestingBatch cacheTestingBatch = new CacheTestingBatch();
+    public CacheTestingBatch createBatch(String cacheType) {
+        CacheTestingBatch cacheTestingBatch = new CacheTestingBatch(cacheType);
         cacheTestingBatchRepository.save(cacheTestingBatch);
         return cacheTestingBatch;
     }

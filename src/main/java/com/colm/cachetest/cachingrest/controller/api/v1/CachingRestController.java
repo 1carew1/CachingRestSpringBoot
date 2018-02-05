@@ -11,6 +11,7 @@ import com.colm.cachetest.cachingrest.utils.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,11 +30,14 @@ public class CachingRestController {
     @Autowired
     private CacheTestingBatchService cacheTestingBatchService;
 
+    @Value ("${spring.cache.type}")
+    private String cacheType;
+
     // create a batch
     @PostMapping(value = "/batch")
     @CrossOrigin(origins = "*")
     public CacheTestingBatch createBatch() {
-        return cacheTestingBatchService.createBatch();
+        return cacheTestingBatchService.createBatch(cacheType);
     }
 
     // For classifying the image with performance measurement

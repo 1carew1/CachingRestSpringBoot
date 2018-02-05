@@ -12,6 +12,14 @@ public class CacheTestingBatch {
     @Column (name = "id", updatable = false, nullable = false)
     private Long id;
     private Date startDate = new Date();
+    String cacheType;
+
+    public CacheTestingBatch () {
+    }
+
+    public CacheTestingBatch (String cacheType) {
+        this.cacheType = cacheType;
+    }
 
     public Long getId() {
         return id;
@@ -19,5 +27,13 @@ public class CacheTestingBatch {
 
     public Date getStartDate() {
         return startDate;
+    }
+
+    public String getCacheType () {
+        return cacheType;
+    }
+
+    public void setCacheType (String cacheType) {
+        this.cacheType = cacheType;
     }
 }
