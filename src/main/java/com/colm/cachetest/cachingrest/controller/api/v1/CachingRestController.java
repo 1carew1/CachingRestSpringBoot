@@ -61,7 +61,6 @@ public class CachingRestController {
             if (classifiedImage != null) {
                 cacheHit = true;
             } else {
-                classifyImageService.evictFromCache(imageHash);
                 log.info("Batch {}. Classifying Image of Hash : {}", batchId, imageHash);
                 // Get time to process Image
                 startDate = new Date();

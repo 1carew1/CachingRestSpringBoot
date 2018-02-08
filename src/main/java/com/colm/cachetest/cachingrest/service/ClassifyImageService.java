@@ -49,16 +49,10 @@ public class ClassifyImageService {
         }
     }
 
-    @Cacheable(value = "imageClassifications", key = "#imageHash")
+    // Checks if in cache and will not cache a null result
+    @Cacheable(value = "imageClassifications", key = "#imageHash", condition = "#result != null")
     public ClassifiedImage checkIfInCache(String imageHash){
         return null;
-    }
-
-    @CacheEvict(value = "imageClassifications", key = "#imageHash")
-    public void evictFromCache(String imageHash){
-        if(imageHash == null || imageHash.equals("")){
-            throw  new UnsupportedOperationException();
-        }
     }
 
     private float[] classifyImageProbabilities (Tensor image) {
