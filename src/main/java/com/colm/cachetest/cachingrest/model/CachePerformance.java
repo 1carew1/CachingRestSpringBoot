@@ -17,6 +17,7 @@ public class CachePerformance{
     private Boolean cacheHit;
     private String fileName;
     private Long elapsedTimeInns;
+    private Long fileSizekB;
     @ManyToOne
     @JoinColumn (name="batch_id")
     private CacheTestingBatch cacheTestingBatch;
@@ -24,7 +25,7 @@ public class CachePerformance{
     public CachePerformance () {
     }
 
-    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName, Long elapsedTimeInns, CacheTestingBatch cacheTestingBatch) {
+    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName, Long elapsedTimeInns, CacheTestingBatch cacheTestingBatch, Long fileSizekB) {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.imageHash = imageHash;
@@ -32,6 +33,7 @@ public class CachePerformance{
         this.fileName = fileName;
         this.elapsedTimeInns = elapsedTimeInns;
         this.cacheTestingBatch = cacheTestingBatch;
+        this.fileSizekB = fileSizekB;
     }
 
     public Date getStartDate () {
@@ -88,5 +90,13 @@ public class CachePerformance{
 
     public CacheTestingBatch getCacheTestingBatch() {
         return cacheTestingBatch;
+    }
+
+    public Long getFileSizekB() {
+        return fileSizekB;
+    }
+
+    public void setFileSizekB(Long fileSizekB) {
+        this.fileSizekB = fileSizekB;
     }
 }

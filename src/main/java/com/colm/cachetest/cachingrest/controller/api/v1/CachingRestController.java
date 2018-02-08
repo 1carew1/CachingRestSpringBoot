@@ -48,6 +48,7 @@ public class CachingRestController {
         CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
         ClassifiedImage classifiedImage = new ClassifiedImage("Unsupported Image Type", 100, null);
         if (validImage && cacheTestingBatch != null) {
+            Long fileSizekB =  file.getSize() / 1024;
             String fileName = file.getOriginalFilename();
             byte[] uploadBytes = file.getBytes();
             String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
@@ -75,7 +76,8 @@ public class CachingRestController {
                     cacheHit,
                     fileName,
                     nanoTimeEnd - nanoTimeStart,
-                    cacheTestingBatch);
+                    cacheTestingBatch,
+                    fileSizekB);
             // Some service that will store this
             asynchDBService.savedCachePerformance(cachePerformance);
         }

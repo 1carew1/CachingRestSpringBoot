@@ -35,6 +35,7 @@ batch_id =  str(resp_dict["id"])
 print("The batch id for this run is : " + batch_id)
 
 number_of_images_processed = 0
+number_of_images_not_processed = 0
 # Send each image to the endpoint
 for imageLocation in imageLocations:
     statinfo = os.stat(imageLocation)
@@ -43,13 +44,14 @@ for imageLocation in imageLocations:
         file = open(imageLocation, 'rb')
         file_contents = file.read()
         files = {'file': (imageLocation, file_contents)}
-        number_of_images_processed = number_of_images_processed + 1
         try:
             image_endpoint = base_url + image_path + "/" + batch_id
             response = requests.post(image_endpoint, files=files)
+            number_of_images_processed = number_of_images_processed + 1
             # print(imageLocation)
             # print(response.content)
         except ConnectionError:
+            number_of_images_not_processed = number_of_images_not_processed + 1
             print("Issue Posting : " + image_endpoint)
 
 script_end = datetime.datetime.now()
@@ -58,4 +60,5 @@ time_diff = script_end - script_start
 time_diff_seconds = int(time_diff.total_seconds())
 time_diff_minutes = time_diff_seconds / 60
 print("Total time to run : " + str(time_diff_minutes) + " minutes")
-print("Number of Images Processed : " + str(number_of_images_processed))
+print("Number of images processed successfully: " + str(number_of_images_processed))
+print("Number of images that failed to process: " + str(number_of_images_not_processed))
