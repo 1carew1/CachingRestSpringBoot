@@ -36,8 +36,8 @@ public class CachingRestController {
     // create a batch
     @PostMapping(value = "/batch")
     @CrossOrigin(origins = "*")
-    public CacheTestingBatch createBatch() {
-        return cacheTestingBatchService.createBatch(cacheType);
+    public CacheTestingBatch createBatch(@RequestBody(required = false) String setupComment) {
+        return cacheTestingBatchService.createBatch(cacheType, setupComment);
     }
 
     // For classifying the image with performance measurement

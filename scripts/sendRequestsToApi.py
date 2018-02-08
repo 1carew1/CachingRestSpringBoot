@@ -1,11 +1,18 @@
 import requests
 import os
 import json
+import sys
 import datetime
 from os import listdir
 from os.path import isfile, join
 from requests.exceptions import ConnectionError
 import random
+
+
+runSetup = "Dry Run"
+
+if(len(sys.argv) >= 2) :
+    runSetup = sys.argv[1]
 
 script_start = datetime.datetime.now()
 print("Start Time : " + str(script_start))
@@ -29,7 +36,7 @@ for smallDir in onlyDirs:
 # random_photo = random.choice(imageLocations)
 
 # Get the batch
-response = requests.post(base_url + batch_path)
+response = requests.post(base_url + batch_path, data=runSetup)
 resp_dict = json.loads(response.content)
 batch_id =  str(resp_dict["id"])
 print("The batch id for this run is : " + batch_id)

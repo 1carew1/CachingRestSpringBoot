@@ -16,8 +16,12 @@ public class CacheTestingBatchService {
         return cacheTestingBatchRepository.findOne(id);
     }
 
-    public CacheTestingBatch createBatch(String cacheType) {
-        CacheTestingBatch cacheTestingBatch = new CacheTestingBatch(cacheType);
+    public CacheTestingBatch createBatch(String cacheType, String setupComment) {
+        String sC = "Dry Run";
+        if(setupComment != null && !setupComment.isEmpty()) {
+            sC = setupComment;
+        }
+        CacheTestingBatch cacheTestingBatch = new CacheTestingBatch(cacheType, sC);
         cacheTestingBatchRepository.save(cacheTestingBatch);
         return cacheTestingBatch;
     }

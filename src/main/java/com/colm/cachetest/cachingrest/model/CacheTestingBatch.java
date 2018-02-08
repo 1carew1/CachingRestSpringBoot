@@ -12,13 +12,15 @@ public class CacheTestingBatch {
     @Column (name = "id", updatable = false, nullable = false)
     private Long id;
     private Date startDate = new Date();
-    String cacheType;
+    private String cacheType;
+    private String setupComment;
 
     public CacheTestingBatch () {
     }
 
-    public CacheTestingBatch (String cacheType) {
+    public CacheTestingBatch (String cacheType, String setupComment) {
         this.cacheType = cacheType;
+        this.setupComment = setupComment;
     }
 
     public Long getId() {
@@ -35,5 +37,13 @@ public class CacheTestingBatch {
 
     public void setCacheType (String cacheType) {
         this.cacheType = cacheType;
+    }
+
+    public String getSetupComment() {
+        return setupComment;
+    }
+
+    public void setSetupComment(String setupComment) {
+        this.setupComment = setupComment;
     }
 }
