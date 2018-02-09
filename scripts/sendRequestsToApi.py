@@ -55,8 +55,6 @@ for imageLocation in imageLocations:
             image_endpoint = base_url + image_path + "/" + batch_id
             response = requests.post(image_endpoint, files=files)
             number_of_images_processed = number_of_images_processed + 1
-            # print(imageLocation)
-            # print(response.content)
         except ConnectionError:
             number_of_images_not_processed = number_of_images_not_processed + 1
             print("Issue Posting : " + image_endpoint)

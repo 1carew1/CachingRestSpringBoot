@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.tensorflow.*;
 
@@ -49,8 +51,8 @@ public class ClassifyImageService {
         }
     }
 
-    // Checks if in cache and will not cache a null result
-    @Cacheable(value = "imageClassifications", key = "#imageHash", condition = "#result != null")
+    // Only want to check the cache, don't want to load anything into it
+    @Cacheable(value = "imageClassifications", key = "#imageHash", unless = "true")
     public ClassifiedImage checkIfInCache(String imageHash){
         return null;
     }
