@@ -47,7 +47,7 @@ number_of_images_not_processed = 0
 for imageLocation in imageLocations:
     statinfo = os.stat(imageLocation)
     # Ensure the images are not gif and are small enough to send
-    if statinfo.st_size < 10485760 and "gif" not in imageLocation:
+    if statinfo.st_size < 10485760 and "gif" not in imageLocation and ".DS_Store" not in imageLocation:
         file = open(imageLocation, 'rb')
         file_contents = file.read()
         files = {'file': (imageLocation, file_contents)}
@@ -55,6 +55,7 @@ for imageLocation in imageLocations:
             image_endpoint = base_url + image_path + "/" + batch_id
             response = requests.post(image_endpoint, files=files)
             number_of_images_processed = number_of_images_processed + 1
+            print (str(number_of_images_processed) + " " + imageLocation)
         except ConnectionError:
             number_of_images_not_processed = number_of_images_not_processed + 1
             print("Issue Posting : " + image_endpoint)
