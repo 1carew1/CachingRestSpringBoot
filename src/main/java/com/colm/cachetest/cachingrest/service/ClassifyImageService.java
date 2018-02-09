@@ -42,7 +42,7 @@ public class ClassifyImageService {
         this.scale = scale;
     }
 
-    @Cacheable(value = "imageClassifications", key = "#imageHash")
+    @CachePut(value = "imageClassifications", key = "#imageHash")
     public ClassifiedImage classifyImage(byte[] imageBytes, String imageHash) {
         try (Tensor image = normalizedImageToTensor(imageBytes)) {
             float[] labelProbabilities = classifyImageProbabilities(image);
