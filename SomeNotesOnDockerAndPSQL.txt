@@ -66,3 +66,9 @@ docker service create \
 # Old Fashioned way to run redis container
 
  docker run -v /myredis/conf/redis.conf:/usr/local/etc/redis/redis.conf --name myredis redis:4.0.2 redis-server /usr/local/etc/redis/redis.conf
+
+
+
+ # Get into redis :
+ docker exec -it redisswarm.1.htx21srlljjyq0rsb57rvfem0 'sh'
+ redis-cli INFO | grep memory
