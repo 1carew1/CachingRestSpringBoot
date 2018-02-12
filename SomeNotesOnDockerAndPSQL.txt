@@ -76,4 +76,4 @@ docker service create \
 
 
 # Run Hazelcast
-docker run -ti -p 5701:5701 hazelcast/hazelcast:3.9.2
+docker run -p 5701:5701 hazelcast/hazelcast:3.9.2
