@@ -4,7 +4,7 @@
         xmlns="http://www.hazelcast.com/schema/config"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <map name="instruments">
+    <map name="default">
         <max-size>200</max-size>
         <eviction-policy>LFU</eviction-policy>
         <time-to-live-seconds>20</time-to-live-seconds>
