@@ -73,3 +73,7 @@ docker service create \
  docker exec -it redisswarm.1.htx21srlljjyq0rsb57rvfem0 'sh'
  redis-cli INFO | grep memory
  redis-cli FLUSHALL
+
+
+# Run Hazelcast
+docker run -ti -p 5701:5701 hazelcast/hazelcast:3.9.2

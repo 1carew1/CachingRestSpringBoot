@@ -30,7 +30,7 @@ public class CachingRestController {
     @Autowired
     private CacheTestingBatchService cacheTestingBatchService;
 
-    @Value ("${spring.cache.type}")
+    @Value ("${spring.cache.type:UNKNOWN}")
     private String cacheType;
 
     // create a batch
