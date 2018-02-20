@@ -22,7 +22,6 @@ select id, cache_hit, image_hash,
     from cache_performance;
 
 docker run --name spring_app_container \
---link postgresdb:postgresdb \
 -p 8080:8080 \
 -t cachingrest:0.0.1-SNAPSHOT
 
