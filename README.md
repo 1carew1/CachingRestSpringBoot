@@ -60,5 +60,10 @@ Note you will need python installed for this.
 - cd scripts
 - python sendRequestsToApi.py
 
+If you get any errors relating to imports you may need to install them such as :
+- sudo apt-get install python-setuptools
+- sudo easy_install pip
+- sudo pip install requests
+
 This will write some information on the image processing to DB (when it started/finished, processing time ns (probably only ms accurate), cache hit t/f).
 
