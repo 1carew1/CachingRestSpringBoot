@@ -38,6 +38,12 @@ To run the project through a terminal, ensure you have Java installed and that t
 ```SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun```
 
 ## Obtaining Test Images
+You will need to install a program called montage and another imagemagick.
+```
+sudo apt-get install montage
+sudo apt-get install imagemagick
+```
+
 To download test images cd in scripts and run 
 
 ```./generateTestImages.sh```

@@ -21,9 +21,10 @@ select id, cache_hit, image_hash,
     (extract(epoch from finish_date) - extract(epoch from start_date))*1000 as timeDiffms, start_date, finish_date
     from cache_performance;
 
-docker run --name spring_app_container \
--p 8080:8080 \
--t cachingrest:0.0.1-SNAPSHOT
+docker run --name spring_app_container -p 8080:8080 -t cachingrest:0.0.1-SNAPSHOT
+
+# Run from Docker Hub
+docker run --name spring_app_container  --add-host="db1:192.168.0.8" --add-host="cache:192.168.0.51" -p 8080:8080 -t 1carew1/cachingresttest
 
 
 psql -h localhost -p 5432 -U dbuser --password
