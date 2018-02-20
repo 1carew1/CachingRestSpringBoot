@@ -11,3 +11,6 @@ python sendRequestsToApi.py "Your Setup Comment Here"
 To run the project through a terminal, ensure you have Java installed and that the machine is 64 bit with a 64 bit OS and run :
 
 ```./gradlew bootRun```
+
+
+If in intellij ensure you have the profile set to dev
