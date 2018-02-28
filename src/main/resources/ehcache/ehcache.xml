@@ -6,9 +6,9 @@
          dynamicConfig="true">
     <cache name="default"
            maxElementsInMemory="100"
-           eternal="false"
+           eternal="true"
            overflowToDisk="false"
-           timeToLiveSeconds="300"
+           timeToLiveSeconds="0"
            timeToIdleSeconds="0"
            memoryStoreEvictionPolicy="LRU"
            transactionalMode="off">
