@@ -4,13 +4,12 @@
          updateCheck="false"
          monitoring="autodetect"
          dynamicConfig="true">
+
+    <defaultCache eternal="true" overflowToDisk="false"/>
+
     <cache name="imageClassifications"
-           maxEntriesLocalHeap="1"
-           eternal="true"
-           overflowToDisk="false"
-           timeToLiveSeconds="0"
-           timeToIdleSeconds="0"
+           maxBytesLocalHeap="50"
            memoryStoreEvictionPolicy="LRU"
-           transactionalMode="off">
+           >
     </cache>
 </ehcache>
