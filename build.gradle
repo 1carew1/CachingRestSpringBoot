@@ -1,17 +1,17 @@
 buildscript {
-	ext {
-		springBootVersion = '2.0.0.M5'
-	}
-	repositories {
-		mavenCentral()
-		maven { url "https://repo.spring.io/snapshot" }
-		maven { url "https://repo.spring.io/milestone" }
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath('se.transmode.gradle:gradle-docker:1.2')
-		classpath 'de.undercouch:gradle-download-task:3.2.0'
-	}
+    ext {
+        springBootVersion = '2.0.0.M5'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+        classpath 'de.undercouch:gradle-download-task:3.2.0'
+    }
 }
 
 group = 'springio'
@@ -28,56 +28,65 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
-	maven { url "https://repo.spring.io/snapshot" }
-	maven { url "https://repo.spring.io/milestone" }
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
 }
 
 
 dependencies {
-	compile('org.tensorflow:tensorflow:1.3.0-rc1')
-	// https://mvnrepository.com/artifact/com.hazelcast/hazelcast-spring
-//	compile group: 'com.hazelcast', name: 'hazelcast-spring', version: '3.9.2'
-//	compile group: 'com.hazelcast', name: 'hazelcast', version: '3.9.2'
-	compile('commons-io:commons-io:2.5')
-	compile 'ch.obermuhlner:big-math:1.2.1'
-	compile('org.springframework.boot:spring-boot-starter-data-rest')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-	compile 'com.yahoo.elide:elide-datastore-hibernate5:1.0.0.19'
-	compile group: 'com.h2database', name: 'h2', version: '1.4.196'
-	compile "org.springframework.boot:spring-boot-starter-logging"
-	compile("org.springframework.boot:spring-boot-starter-data-redis")
-	compile "redis.clients:jedis:2.6.1"
-	runtime 'org.postgresql:postgresql:42.1.1'
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    // Hazelcast
+    // https://mvnrepository.com/artifact/com.hazelcast/hazelcast-spring
+    //compile group: 'com.hazelcast', name: 'hazelcast-spring', version: '3.9.2'
+    //compile group: 'com.hazelcast', name: 'hazelcast', version: '3.9.2'
+
+    // EhCache
+    // https://mvnrepository.com/artifact/org.ehcache/ehcache
+    compile group: 'org.ehcache', name: 'ehcache', version: '3.5.0'
+
+    // Redis
+    //compile("org.springframework.boot:spring-boot-starter-data-redis")
+    //compile "redis.clients:jedis:2.6.1"
+
+    compile('org.tensorflow:tensorflow:1.3.0-rc1')
+    compile('commons-io:commons-io:2.5')
+    compile 'ch.obermuhlner:big-math:1.2.1'
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+    compile 'com.yahoo.elide:elide-datastore-hibernate5:1.0.0.19'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.196'
+    compile "org.springframework.boot:spring-boot-starter-logging"
+    runtime 'org.postgresql:postgresql:42.1.1'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
-	// For setting more variables see : https://github.com/Transmode/gradle-docker
-	push = false
-	project.group = ""
-	applicationName = jar.baseName
-	dockerfile = file('Dockerfile')
-	doFirst {
-		copy {
-			from jar
-			into stageDir
-		}
-	}
+    // For setting more variables see : https://github.com/Transmode/gradle-docker
+    push = false
+    project.group = ""
+    applicationName = jar.baseName
+    dockerfile = file('Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
 }
 
 import de.undercouch.gradle.tasks.download.Download
+
 task downloadInceptionFrozen(type: Download) {
-	onlyIfNewer true
-	src 'https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz'
-	dest new File(buildDir, 'inception_v3_2016_08_28_frozen.pb.tar.gz')
+    onlyIfNewer true
+    src 'https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz'
+    dest new File(buildDir, 'inception_v3_2016_08_28_frozen.pb.tar.gz')
 }
 
 task fetchInceptionFrozenModel(dependsOn: downloadInceptionFrozen, type: Copy) {
-	from tarTree(downloadInceptionFrozen.dest)
-	into 'src/main/resources/inception-v3'
+    from tarTree(downloadInceptionFrozen.dest)
+    into 'src/main/resources/inception-v3'
 }
 
 build.dependsOn fetchInceptionFrozenModel

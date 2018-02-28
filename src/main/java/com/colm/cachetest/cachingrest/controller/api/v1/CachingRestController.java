@@ -95,6 +95,7 @@ public class CachingRestController {
             String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
             log.info("No Performance Measuring. Classifying Image of Hash : {}", imageHash);
             classifiedImage = classifyImageService.classifyImage(uploadBytes, imageHash);
+            log.info("Classifying Finished for : {}", imageHash);
         }
         return classifiedImage;
     }

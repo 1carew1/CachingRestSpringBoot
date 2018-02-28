@@ -23,6 +23,11 @@ image_path = "classify"
 batch_path = "batch"
 mypath = "../images/"
 
+# Ensure no caching
+request_headers = {
+    'cache-control': 'private, max-age=0, no-cache'
+}
+
 onlyDirs = [f for f in listdir(mypath) if not isfile(join(mypath, f))]
 imagePosition = 0
 imageLocations = []
@@ -36,7 +41,7 @@ for smallDir in onlyDirs:
 # random_photo = random.choice(imageLocations)
 
 # Get the batch
-response = requests.post(base_url + batch_path, data=runSetup)
+response = requests.post(base_url + batch_path, data=runSetup, headers=request_headers)
 resp_dict = json.loads(response.content)
 batch_id =  str(resp_dict["id"])
 print("The batch id for this run is : " + batch_id)
@@ -53,7 +58,7 @@ for imageLocation in imageLocations:
         files = {'file': (imageLocation, file_contents)}
         try:
             image_endpoint = base_url + image_path + "/" + batch_id
-            response = requests.post(image_endpoint, files=files)
+            response = requests.post(image_endpoint, files=files, headers=request_headers)
             number_of_images_processed = number_of_images_processed + 1
             print (str(number_of_images_processed) + " " + imageLocation)
         except ConnectionError:
