@@ -5,7 +5,7 @@
          monitoring="autodetect"
          dynamicConfig="true">
     <cache name="imageClassifications"
-           maxElementsInMemory="5"
+           maxEntriesLocalHeap="1"
            eternal="true"
            overflowToDisk="false"
            timeToLiveSeconds="0"

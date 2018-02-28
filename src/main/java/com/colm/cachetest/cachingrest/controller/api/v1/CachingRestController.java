@@ -23,6 +23,8 @@ import java.util.Date;
 public class CachingRestController {
 
     private static final Logger log = LoggerFactory.getLogger(CachingRestController.class);
+    private static final String UNKNOWN = "UNKNOWN";
+
     @Autowired
     private ClassifyImageService classifyImageService;
     @Autowired
@@ -30,13 +32,27 @@ public class CachingRestController {
     @Autowired
     private CacheTestingBatchService cacheTestingBatchService;
 
-    @Value ("${spring.cache.type:UNKNOWN}")
-    private String cacheType;
+    @Value("${spring.cache.type:UNKNOWN}")
+    private String redisCache;
+
+    @Value("${spring.hazelcast.config:UNKNOWN}")
+    private String hazelCast;
+
+    @Value("${spring.cache.ehcache.config:UNKNOWN}")
+    private String ehcache;
 
     // create a batch
     @PostMapping(value = "/batch")
     @CrossOrigin(origins = "*")
     public CacheTestingBatch createBatch(@RequestBody(required = false) String setupComment) {
+        String cacheType = "NONE";
+        if (!redisCache.equals(UNKNOWN)) {
+            cacheType = redisCache;
+        } else if (!ehcache.equals(UNKNOWN)) {
+            cacheType = "Ehcache";
+        } else if (!hazelCast.equals(UNKNOWN)) {
+            cacheType = "Hazelcast";
+        }
         return cacheTestingBatchService.createBatch(cacheType, setupComment);
     }
 
@@ -48,7 +64,7 @@ public class CachingRestController {
         CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
         ClassifiedImage classifiedImage = new ClassifiedImage("Unsupported Image Type", 100, null);
         if (validImage && cacheTestingBatch != null) {
-            Long fileSizekB =  file.getSize() / 1024;
+            Long fileSizekB = file.getSize() / 1024;
             String fileName = file.getOriginalFilename();
             byte[] uploadBytes = file.getBytes();
             String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
