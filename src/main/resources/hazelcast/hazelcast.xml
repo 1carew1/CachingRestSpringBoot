@@ -5,9 +5,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <map name="imageClassifications">
-        <max-size>200</max-size>
-        <eviction-policy>LFU</eviction-policy>
-        <time-to-live-seconds>20</time-to-live-seconds>
+        <max-size>4</max-size>
+        <eviction-policy>LRU</eviction-policy>
+        <time-to-live-seconds>0</time-to-live-seconds>
     </map>
 
 </hazelcast>
