@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = {HazelcastAutoConfiguration.class})
 @EnableCaching
 public class CachingrestApplication {
 

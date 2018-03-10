@@ -41,11 +41,11 @@ dependencies {
 
     // Hazelcast
     // https://mvnrepository.com/artifact/com.hazelcast/hazelcast-spring
-    compile group: 'com.hazelcast', name: 'hazelcast-all', version: '3.9.2'
+    //compile group: 'com.hazelcast', name: 'hazelcast-all', version: '3.9.2'
 
     // EhCache
     // https://mvnrepository.com/artifact/org.ehcache/ehcache
-    // compile group: 'org.ehcache', name: 'ehcache', version: '3.5.0'
+    compile group: 'org.ehcache', name: 'ehcache', version: '3.5.0'
 
     // Redis
     //compile("org.springframework.boot:spring-boot-starter-data-redis")
