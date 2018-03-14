@@ -1,0 +1,16 @@
+<hazelcast xsi:noNamespaceSchemaLocation="https://hazelcast.com/schema/config/hazelcast-config-3.9.xsd"
+           xmlns="http://www.hazelcast.com/schema/config"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <map name="imageClassifications">
+        <time-to-live-seconds>2</time-to-live-seconds>
+        <max-size policy="USED_HEAP_SIZE">4096</max-size>
+    </map>
+
+    <network>
+        <join>
+            <multicast enabled="false"/>
+        </join>
+    </network>
+
+</hazelcast>

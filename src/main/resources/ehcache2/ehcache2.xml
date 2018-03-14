@@ -2,6 +2,11 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd">
 
+
+    <!--Important Links :
+        http://www.ehcache.org/documentation/2.7/configuration/cache-size.html
+
+    -->
     <cache name="imageClassifications"
            maxBytesLocalHeap="5M"
            eternal="true"
