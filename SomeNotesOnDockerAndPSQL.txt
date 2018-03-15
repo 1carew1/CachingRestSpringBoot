@@ -75,5 +75,5 @@ docker service create \
  redis-cli FLUSHALL
 
 
-# Run Hazelcast
-docker run -p 5701:5701 hazelcast/hazelcast:3.9.2
+# Run Memcached
+docker run --name my-memcache -p 11211:11211 -d memcached
