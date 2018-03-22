@@ -2,6 +2,7 @@ package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
 import com.colm.cachetest.cachingrest.model.CachePerformance;
+import com.colm.cachetest.cachingrest.model.CacheRemainder;
 import com.colm.cachetest.cachingrest.model.CacheTestingBatch;
 import com.colm.cachetest.cachingrest.model.ClassifiedImage;
 import com.colm.cachetest.cachingrest.service.AsynchDBService;
@@ -54,6 +55,25 @@ public class CachingRestController {
             cacheType = "Hazelcast";
         }
         return cacheTestingBatchService.createBatch(cacheType, setupComment);
+    }
+
+    // For see if the item is in Cache
+    @PostMapping(value = "/classify/{batchId}")
+    @CrossOrigin(origins = "*")
+    public String checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
+        boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
+        CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
+        if (validImage && cacheTestingBatch != null) {
+            byte[] uploadBytes = file.getBytes();
+            String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
+            ClassifiedImage classifiedImage = classifyImageService.checkIfInCache(imageHash);
+            if (classifiedImage != null) {
+                CacheRemainder cacheRemainder = new CacheRemainder(imageHash, cacheTestingBatch);
+                asynchDBService.saveEntity(cacheRemainder);
+                return "{result : \"Success. Item is present In Cache\"}";
+            }
+        }
+        return "{result : \"Failure. Item is not present In Cache\"}";
     }
 
     // For classifying the image with performance measurement
