@@ -95,7 +95,7 @@ public class CachingRestController {
                     cacheTestingBatch,
                     fileSizekB);
             // Some service that will store this
-            asynchDBService.savedCachePerformance(cachePerformance);
+            asynchDBService.saveEntity(cachePerformance);
         }
         return classifiedImage;
     }
