@@ -4,7 +4,7 @@ import com.colm.cachetest.cachingrest.model.CachePerformance;
 import com.colm.cachetest.cachingrest.model.CacheRemainder;
 import com.colm.cachetest.cachingrest.repository.CachePerformanceRepository;
 import com.colm.cachetest.cachingrest.repository.CacheRemainderRepository;
-import com.colm.cachetest.cachingrest.threads.CachePerformanceSaver;
+import com.colm.cachetest.cachingrest.threads.EntitySaver;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +28,9 @@ public class AsynchDBService {
     public void saveEntity(Object entity) {
         Runnable savingThread = null;
         if(entity instanceof CachePerformance) {
-            savingThread = new CachePerformanceSaver(cachePerformanceRepository, entity);
+            savingThread = new EntitySaver(cachePerformanceRepository, entity);
         } else if(entity instanceof CacheRemainder) {
-            savingThread = new CachePerformanceSaver(cacheRemainderRepository, entity);
+            savingThread = new EntitySaver(cacheRemainderRepository, entity);
         }
         if(savingThread != null) {
             executor.execute(savingThread);

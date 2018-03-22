@@ -58,7 +58,7 @@ public class CachingRestController {
     }
 
     // For see if the item is in Cache
-    @PostMapping(value = "/classify/{batchId}")
+    @PostMapping(value = "/checkcache/{batchId}")
     @CrossOrigin(origins = "*")
     public String checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
