@@ -54,7 +54,10 @@ def obtain_file_contents(file_path):
 def obtain_classification_from_json(the_json):
     classification = None
     if(the_json is not None):
-        classification = json.loads(the_json)
+        try :
+            classification = json.loads(the_json)
+        except ValueError:
+            classification = None
     return classification
 
 
