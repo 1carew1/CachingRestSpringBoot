@@ -6,3 +6,5 @@
 ./googliser.sh "puppies"
 ./googliser.sh "dogs"
 ./googliser.sh "animals"
+git clone https://github.com/1carew1/image_uniqueifier
+python3 image_uniqueifier/image_uniqueify.py "../images"
