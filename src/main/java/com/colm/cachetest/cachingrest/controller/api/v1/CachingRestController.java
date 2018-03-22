@@ -13,6 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,33 +38,29 @@ public class CachingRestController {
     private CacheTestingBatchService cacheTestingBatchService;
 
     @Value("${spring.cache.type:UNKNOWN}")
-    private String redisCache;
+    private String cacheType;
 
-    @Value("${spring.hazelcast.config:UNKNOWN}")
-    private String hazelCast;
-
-    @Value("${spring.cache.ehcache.config:UNKNOWN}")
-    private String ehcache;
+    @Value("${memcached.cache.mode:UNKNOWN}")
+    private String memcached;
 
     // create a batch
     @PostMapping(value = "/batch")
     @CrossOrigin(origins = "*")
     public CacheTestingBatch createBatch(@RequestBody(required = false) String setupComment) {
-        String cacheType = "NONE";
-        if (!redisCache.equals(UNKNOWN)) {
-            cacheType = redisCache;
-        } else if (!ehcache.equals(UNKNOWN)) {
-            cacheType = "Ehcache";
-        } else if (!hazelCast.equals(UNKNOWN)) {
-            cacheType = "Hazelcast";
+        String type = cacheType;
+        if(!memcached.equals("UNKNOWN")) {
+            type = "memcached";
         }
-        return cacheTestingBatchService.createBatch(cacheType, setupComment);
+        return cacheTestingBatchService.createBatch(type, setupComment);
     }
 
     // For see if the item is in Cache
     @PostMapping(value = "/checkcache/{batchId}")
     @CrossOrigin(origins = "*")
-    public String checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
+    public ResponseEntity checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
+        final HttpHeaders httpHeaders= new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        String result = "{\"result\" : \"Failure. Item is not present In Cache\"}";
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
         CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
         if (validImage && cacheTestingBatch != null) {
@@ -70,10 +70,10 @@ public class CachingRestController {
             if (classifiedImage != null) {
                 CacheRemainder cacheRemainder = new CacheRemainder(imageHash, cacheTestingBatch);
                 asynchDBService.saveEntity(cacheRemainder);
-                return "{result : \"Success. Item is present In Cache\"}";
+                result = "{\"result\" : \"Success. Item is present In Cache\"}";
             }
         }
-        return "{result : \"Failure. Item is not present In Cache\"}";
+        return new ResponseEntity<>(result, httpHeaders, HttpStatus.OK);
     }
 
     // For classifying the image with performance measurement
