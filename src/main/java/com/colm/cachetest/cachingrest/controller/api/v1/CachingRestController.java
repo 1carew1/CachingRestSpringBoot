@@ -57,23 +57,20 @@ public class CachingRestController {
     // For see if the item is in Cache
     @PostMapping(value = "/checkcache/{batchId}")
     @CrossOrigin(origins = "*")
-    public ResponseEntity checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
-        final HttpHeaders httpHeaders= new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        String result = "{\"result\" : \"Failure. Item is not present In Cache\"}";
+    public ClassifiedImage checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
+        ClassifiedImage classifiedImage = null;
         boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
         CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
         if (validImage && cacheTestingBatch != null) {
             byte[] uploadBytes = file.getBytes();
             String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
-            ClassifiedImage classifiedImage = classifyImageService.checkIfInCache(imageHash);
+            classifiedImage = classifyImageService.checkIfInCache(imageHash);
             if (classifiedImage != null) {
                 CacheRemainder cacheRemainder = new CacheRemainder(imageHash, cacheTestingBatch);
                 asynchDBService.saveEntity(cacheRemainder);
-                result = "{\"result\" : \"Success. Item is present In Cache\"}";
             }
         }
-        return new ResponseEntity<>(result, httpHeaders, HttpStatus.OK);
+        return classifiedImage;
     }
 
     // For classifying the image with performance measurement
