@@ -30,11 +30,11 @@ public class ClassificationCacheManipulationService {
     public ClassifiedImage checkCache(Long batchId, MultipartFile file) {
         ClassifiedImage classifiedImage = null;
         CacheTestingBatch batch = batchService.obtainBatch(batchId);
-        if(batch == null) {
+        if (batch == null) {
             throw new MissingResourceException("Batch is not available", null, null);
         }
         String imageHash = ImageUtils.obtainFileHashFromMultipartFile(file);
-        log.info("Trying to Pull Image from Cache with hash : {}", imageHash);
+        log.info("Batch {}. Trying to Pull Image from Cache with hash : {}", batchId, imageHash);
         classifiedImage = classifyImageService.checkIfInCache(imageHash);
         if (classifiedImage != null) {
             CacheRemainder cacheRemainder = new CacheRemainder(imageHash, batch);
@@ -86,6 +86,7 @@ public class ClassificationCacheManipulationService {
     public ClassifiedImage classifyImage(MultipartFile file) {
         String imageHash = ImageUtils.obtainFileHashFromMultipartFile(file);
         byte[] fileBytes = ImageUtils.obtainBytesFromMultipartFile(file);
+        log.info("Classifying Image without metrics. Hash : {}", imageHash);
         return classifyImageService.classifyImage(fileBytes, imageHash);
     }
 
