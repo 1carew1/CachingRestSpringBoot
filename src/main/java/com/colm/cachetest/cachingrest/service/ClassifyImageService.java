@@ -1,12 +1,12 @@
 package com.colm.cachetest.cachingrest.service;
+
 import com.colm.cachetest.cachingrest.model.ClassifiedImage;
+import com.colm.cachetest.cachingrest.utils.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.tensorflow.*;
 
@@ -25,14 +25,14 @@ public class ClassifyImageService {
     private final List<String> labels;
     private final String outputLayer;
 
-    private  int width;
+    private int width;
     private int height;
     private float mean;
     private float scale;
 
     public ClassifyImageService(Graph inceptionGraph, List<String> labels, @Value("${tf.outputLayer}") String outputLayer,
                                 @Value("${tf.image.width}") int imageW, @Value("${tf.image.height}") int imageH,
-                                @Value("${tf.image.mean}")float mean, @Value("${tf.image.scale}") float scale) {
+                                @Value("${tf.image.mean}") float mean, @Value("${tf.image.scale}") float scale) {
         this.inceptionGraph = inceptionGraph;
         this.labels = labels;
         this.outputLayer = outputLayer;
@@ -42,8 +42,12 @@ public class ClassifyImageService {
         this.scale = scale;
     }
 
-    @CachePut(value = "imageClassifications", key = "#imageHash")
+    @CachePut(value = "imageClassifications", key = "#imageHash", unless = "#result == null ")
     public ClassifiedImage classifyImage(byte[] imageBytes, String imageHash) {
+        boolean isImage = ImageUtils.verifyByteArrayIsImage(imageBytes);
+        if (!isImage || imageBytes == null || imageHash == null) {
+            return null;
+        }
         try (Tensor image = normalizedImageToTensor(imageBytes)) {
             float[] labelProbabilities = classifyImageProbabilities(image);
             int bestLabelIdx = maxIndex(labelProbabilities);
@@ -53,11 +57,11 @@ public class ClassifyImageService {
 
     // Only want to check the cache, don't want to load anything into it
     @Cacheable(value = "imageClassifications", key = "#imageHash", unless = "true")
-    public ClassifiedImage checkIfInCache(String imageHash){
+    public ClassifiedImage checkIfInCache(String imageHash) {
         return null;
     }
 
-    private float[] classifyImageProbabilities (Tensor image) {
+    private float[] classifyImageProbabilities(Tensor image) {
         try (Session s = new Session(inceptionGraph);
              Tensor result = s.runner().feed("input", image).fetch(outputLayer).run().get(0)) {
             final long[] rshape = result.shape();
@@ -105,7 +109,7 @@ public class ClassifyImageService {
                                             b.expandDims(
                                                     b.cast(b.decodeJpeg(input, 3), DataType.FLOAT),
                                                     b.constant("make_batch", 0)),
-                                            b.constant("size", new int[] {height, width})),
+                                            b.constant("size", new int[]{height, width})),
                                     b.constant("mean", mean)),
                             b.constant("scale", scale));
             try (Session s = new Session(g)) {

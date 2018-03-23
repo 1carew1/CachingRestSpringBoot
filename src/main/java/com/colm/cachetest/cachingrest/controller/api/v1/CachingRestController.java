@@ -1,27 +1,18 @@
 package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
-import com.colm.cachetest.cachingrest.model.CachePerformance;
-import com.colm.cachetest.cachingrest.model.CacheRemainder;
 import com.colm.cachetest.cachingrest.model.CacheTestingBatch;
 import com.colm.cachetest.cachingrest.model.ClassifiedImage;
-import com.colm.cachetest.cachingrest.service.AsynchDBService;
 import com.colm.cachetest.cachingrest.service.CacheTestingBatchService;
-import com.colm.cachetest.cachingrest.service.ClassifyImageService;
-import com.colm.cachetest.cachingrest.utils.ImageUtils;
+import com.colm.cachetest.cachingrest.service.ClassificationCacheManipulationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -31,11 +22,9 @@ public class CachingRestController {
     private static final String UNKNOWN = "UNKNOWN";
 
     @Autowired
-    private ClassifyImageService classifyImageService;
+    private ClassificationCacheManipulationService classificationService;
     @Autowired
-    private AsynchDBService asynchDBService;
-    @Autowired
-    private CacheTestingBatchService cacheTestingBatchService;
+    private CacheTestingBatchService batchService;
 
     @Value("${spring.cache.type:UNKNOWN}")
     private String cacheType;
@@ -48,89 +37,35 @@ public class CachingRestController {
     @CrossOrigin(origins = "*")
     public CacheTestingBatch createBatch(@RequestBody(required = false) String setupComment) {
         String type = cacheType;
-        if(!memcached.equals("UNKNOWN")) {
+        if (!memcached.equals(UNKNOWN)) {
             type = "memcached";
         }
-        return cacheTestingBatchService.createBatch(type, setupComment);
+        log.info("Creating Batch");
+        return batchService.createBatch(type, setupComment);
     }
 
-    // For see if the item is in Cache
+    // see if the image is in Cache
     @PostMapping(value = "/checkcache/{batchId}")
     @CrossOrigin(origins = "*")
     public ClassifiedImage checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
-        ClassifiedImage classifiedImage = null;
-        boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
-        CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
-        if (validImage && cacheTestingBatch != null) {
-            byte[] uploadBytes = file.getBytes();
-            String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
-            classifiedImage = classifyImageService.checkIfInCache(imageHash);
-            if (classifiedImage != null) {
-                CacheRemainder cacheRemainder = new CacheRemainder(imageHash, cacheTestingBatch);
-                asynchDBService.saveEntity(cacheRemainder);
-            }
-        }
-        return classifiedImage;
+        log.info("Pulling Image classification from cache, batch : {}", batchId);
+        return classificationService.checkCache(batchId, file);
     }
 
     // For classifying the image with performance measurement
     @PostMapping(value = "/classify/{batchId}")
     @CrossOrigin(origins = "*")
     public ClassifiedImage classifyImage(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
-        boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
-        CacheTestingBatch cacheTestingBatch = cacheTestingBatchService.obtainBatch(batchId);
-        ClassifiedImage classifiedImage = new ClassifiedImage("Unsupported Image Type", 100, null);
-        if (validImage && cacheTestingBatch != null) {
-            Long fileSizekB = file.getSize() / 1024;
-            String fileName = file.getOriginalFilename();
-            byte[] uploadBytes = file.getBytes();
-            String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
-            // Get time to pull from Cache
-            Date startDate = new Date();
-            long nanoTimeStart = System.nanoTime();
-            classifiedImage = classifyImageService.checkIfInCache(imageHash);
-            long nanoTimeEnd = System.nanoTime();
-            Date endDate = new Date();
-            boolean cacheHit = false;
-            if (classifiedImage != null) {
-                cacheHit = true;
-            } else {
-                log.info("Batch {}. Classifying Image of Hash : {}", batchId, imageHash);
-                // Get time to process Image
-                startDate = new Date();
-                nanoTimeStart = System.nanoTime();
-                classifiedImage = classifyImageService.classifyImage(uploadBytes, imageHash);
-                nanoTimeEnd = System.nanoTime();
-                endDate = new Date();
-            }
-            CachePerformance cachePerformance = new CachePerformance(startDate,
-                    endDate,
-                    imageHash,
-                    cacheHit,
-                    fileName,
-                    nanoTimeEnd - nanoTimeStart,
-                    cacheTestingBatch,
-                    fileSizekB);
-            // Some service that will store this
-            asynchDBService.saveEntity(cachePerformance);
-        }
-        return classifiedImage;
+        log.info("Classifying Image with Cache performance metrics, batch : {}", batchId);
+        return classificationService.classifyImageWithCachePerformanceMeasurements(batchId, file);
     }
 
     // For classifying the image with no performance measurement
     @PostMapping(value = "/classify")
     @CrossOrigin(origins = "*")
     public ClassifiedImage classifyImage(@RequestBody MultipartFile file) throws IOException {
-        boolean validImage = ImageUtils.verifyMultipartFileIsImage(file);
-        ClassifiedImage classifiedImage = new ClassifiedImage("Unsupported Image Type", 100, null);
-        if (validImage) {
-            byte[] uploadBytes = file.getBytes();
-            String imageHash = ImageUtils.obtainHashOfByeArray(uploadBytes);
-            log.info("No Performance Measuring. Classifying Image of Hash : {}", imageHash);
-            classifiedImage = classifyImageService.classifyImage(uploadBytes, imageHash);
-            log.info("Classifying Finished for : {}", imageHash);
-        }
-        return classifiedImage;
+        log.info("Classifying Image without Cache performance metrics");
+        return classificationService.classifyImage(file);
     }
 
     @RequestMapping(value = "/")

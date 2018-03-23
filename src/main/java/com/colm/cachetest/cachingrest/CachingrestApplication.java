@@ -58,24 +58,4 @@ public class CachingrestApplication {
         return IOUtils.readLines(labelsRes.getInputStream(), Charset.forName("UTF-8")).stream()
                 .map(label -> label.substring(label.contains(":") ? label.indexOf(":") + 1 : 0)).collect(Collectors.toList());
     }
-
-
-    // Code for getting working with Couchbase
-//    @Bean(destroyMethod = "disconnect")
-//    public Cluster cluster() {
-//        // connect to the couchbase-server running on your local machine
-//        return CouchbaseCluster.create();
-//    }
-//
-//    @Bean(destroyMethod = "close")
-//    public Bucket bucket() {
-//        cluster().authenticate("colm", "password");
-//        return cluster().openBucket("colmcachetest");
-//    }
-//
-//    @Bean
-//    public CacheManager cacheManager() {
-//        CacheBuilder cacheBuilder = CacheBuilder.newInstance(bucket()).withExpiration(0);
-//        return new CouchbaseCacheManager(cacheBuilder, "imageClassifications");
-//    }
 }
