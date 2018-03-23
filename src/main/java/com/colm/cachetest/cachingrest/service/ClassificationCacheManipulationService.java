@@ -34,6 +34,7 @@ public class ClassificationCacheManipulationService {
             throw new MissingResourceException("Batch is not available", null, null);
         }
         String imageHash = ImageUtils.obtainFileHashFromMultipartFile(file);
+        log.info("Trying to Pull Image from Cache with hash : {}", imageHash);
         classifiedImage = classifyImageService.checkIfInCache(imageHash);
         if (classifiedImage != null) {
             CacheRemainder cacheRemainder = new CacheRemainder(imageHash, batch);
@@ -50,7 +51,8 @@ public class ClassificationCacheManipulationService {
         }
         Long fileSizekB = file.getSize() / 1024;
         String fileName = file.getOriginalFilename();
-        String imageHash = ImageUtils.obtainFileHashFromMultipartFile(file);
+        byte[] fileBytes = ImageUtils.obtainBytesFromMultipartFile(file);
+        String imageHash = ImageUtils.obtainHashOfByeArray(fileBytes);
         // Get time to pull from Cache
         Date startDate = new Date();
         long nanoTimeStart = System.nanoTime();
@@ -65,7 +67,7 @@ public class ClassificationCacheManipulationService {
             // Get time to process Image
             startDate = new Date();
             nanoTimeStart = System.nanoTime();
-            classifiedImage = classifyImage(file);
+            classifiedImage = classifyImageService.classifyImage(fileBytes, imageHash);
             nanoTimeEnd = System.nanoTime();
             endDate = new Date();
         }

@@ -48,7 +48,6 @@ public class CachingRestController {
     @PostMapping(value = "/checkcache/{batchId}")
     @CrossOrigin(origins = "*")
     public ClassifiedImage checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
-        log.info("Pulling Image classification from cache, batch : {}", batchId);
         return classificationService.checkCache(batchId, file);
     }
 
@@ -56,7 +55,6 @@ public class CachingRestController {
     @PostMapping(value = "/classify/{batchId}")
     @CrossOrigin(origins = "*")
     public ClassifiedImage classifyImage(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
-        log.info("Classifying Image with Cache performance metrics, batch : {}", batchId);
         return classificationService.classifyImageWithCachePerformanceMeasurements(batchId, file);
     }
 
@@ -64,7 +62,6 @@ public class CachingRestController {
     @PostMapping(value = "/classify")
     @CrossOrigin(origins = "*")
     public ClassifiedImage classifyImage(@RequestBody MultipartFile file) throws IOException {
-        log.info("Classifying Image without Cache performance metrics");
         return classificationService.classifyImage(file);
     }
 
