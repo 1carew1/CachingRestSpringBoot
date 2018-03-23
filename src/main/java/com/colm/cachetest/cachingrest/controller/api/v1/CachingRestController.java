@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/v1")
 public class CachingRestController {
@@ -47,26 +45,21 @@ public class CachingRestController {
     // see if the image is in Cache
     @PostMapping(value = "/checkcache/{batchId}")
     @CrossOrigin(origins = "*")
-    public ClassifiedImage checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
+    public ClassifiedImage checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) {
         return classificationService.checkCache(batchId, file);
     }
 
     // For classifying the image with performance measurement
     @PostMapping(value = "/classify/{batchId}")
     @CrossOrigin(origins = "*")
-    public ClassifiedImage classifyImage(@PathVariable Long batchId, @RequestBody MultipartFile file) throws IOException {
+    public ClassifiedImage classifyImage(@PathVariable Long batchId, @RequestBody MultipartFile file) {
         return classificationService.classifyImageWithCachePerformanceMeasurements(batchId, file);
     }
 
     // For classifying the image with no performance measurement
     @PostMapping(value = "/classify")
     @CrossOrigin(origins = "*")
-    public ClassifiedImage classifyImage(@RequestBody MultipartFile file) throws IOException {
+    public ClassifiedImage classifyImage(@RequestBody MultipartFile file) {
         return classificationService.classifyImage(file);
-    }
-
-    @RequestMapping(value = "/")
-    public String index() {
-        return "index";
     }
 }
