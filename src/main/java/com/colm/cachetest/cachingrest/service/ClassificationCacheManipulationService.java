@@ -27,10 +27,6 @@ public class ClassificationCacheManipulationService {
     @Autowired
     private ClassifyImageService classifyImageService;
 
-    private ClassifiedImage obtainClassifiedImageFromCache(String imageHash) {
-        return classifyImageService.checkIfInCache(imageHash);
-    }
-
     public ClassifiedImage checkCache(Long batchId, MultipartFile file) {
         ClassifiedImage classifiedImage = null;
         CacheTestingBatch batch = batchService.obtainBatch(batchId);
@@ -38,7 +34,7 @@ public class ClassificationCacheManipulationService {
             throw new MissingResourceException("Batch is not available", null, null);
         }
         String imageHash = ImageUtils.obtainFileHashFromMultipartFile(file);
-        classifiedImage = obtainClassifiedImageFromCache(imageHash);
+        classifiedImage = classifyImageService.checkIfInCache(imageHash);
         if (classifiedImage != null) {
             CacheRemainder cacheRemainder = new CacheRemainder(imageHash, batch);
             asynchDBService.saveEntity(cacheRemainder);
@@ -58,7 +54,7 @@ public class ClassificationCacheManipulationService {
         // Get time to pull from Cache
         Date startDate = new Date();
         long nanoTimeStart = System.nanoTime();
-        classifiedImage = obtainClassifiedImageFromCache(imageHash);
+        classifiedImage = classifyImageService.checkIfInCache(imageHash);
         long nanoTimeEnd = System.nanoTime();
         Date endDate = new Date();
         boolean cacheHit = false;
@@ -81,9 +77,7 @@ public class ClassificationCacheManipulationService {
                 nanoTimeEnd - nanoTimeStart,
                 cacheTestingBatch,
                 fileSizekB);
-        // Some service that will store this
         asynchDBService.saveEntity(cachePerformance);
-
         return classifiedImage;
     }
 
