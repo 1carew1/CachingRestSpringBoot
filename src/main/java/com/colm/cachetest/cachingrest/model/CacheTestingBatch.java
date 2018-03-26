@@ -14,6 +14,7 @@ public class CacheTestingBatch {
     private Date startDate = new Date();
     private String cacheType;
     private String setupComment;
+    private Date endDate;
 
     public CacheTestingBatch () {
     }
@@ -45,5 +46,13 @@ public class CacheTestingBatch {
 
     public void setSetupComment(String setupComment) {
         this.setupComment = setupComment;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

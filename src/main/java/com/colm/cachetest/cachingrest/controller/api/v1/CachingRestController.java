@@ -42,6 +42,13 @@ public class CachingRestController {
         return batchService.createBatch(type, setupComment);
     }
 
+    // finish the batch
+    @PutMapping(value = "/batch/{batchId}")
+    @CrossOrigin(origins = "*")
+    public CacheTestingBatch completeBatch(@PathVariable Long batchId) {
+       return batchService.completeBatch(batchId);
+    }
+
     // see if the image is in Cache
     @PostMapping(value = "/checkcache/{batchId}")
     @CrossOrigin(origins = "*")

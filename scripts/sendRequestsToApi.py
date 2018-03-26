@@ -93,6 +93,13 @@ def send_image_requests(file_list, batch_id, request_path):
     print("Number of images that failed to process: ", number_of_images_not_processed)
 
 
+# Complete the batch
+def finish_batch(batch_id):
+    response = requests.put(base_url + batch_path + "/" + str(batch_id))
+    resp_dict = json.loads(response.content)
+    completion_date = resp_dict["endDate"]
+    print("The end date for the batch is : ", completion_date)
+
 if (__name__ == "__main__"):
     script_start = datetime.datetime.now()
     print("Start Time : ", script_start)
@@ -107,6 +114,8 @@ if (__name__ == "__main__"):
     send_image_requests(file_pool, batch_id, classify_image_path)
     # Check Whats left in Cache
     send_image_requests(file_pool, batch_id, check_cache_path)
+    # Complete the Batch
+    finish_batch(batch_id)
 
     script_end = datetime.datetime.now()
     print("Finish Time : ", script_end)
