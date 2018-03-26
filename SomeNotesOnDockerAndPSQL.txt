@@ -1,7 +1,6 @@
 docker create -v /var/lib/postgresql/data --name spring_app_data postgres:10.0
 docker run --name postgresdb -p 5432:5432 --volumes-from spring_app_data -e  POSTGRES_PASSWORD=password   -d postgres:10.0
 
-
 docker exec -it postgresdb su postgres -c 'psql'
 \password postgres
 CREATE ROLE dbuser WITH LOGIN PASSWORD 'password' ;
@@ -27,11 +26,6 @@ docker run --name spring_app_container -p 8080:8080 -t cachingrest:0.0.1-SNAPSHO
 docker run --name spring_app_container  --add-host="db1:192.168.0.8" --add-host="cache:192.168.0.51" -p 8080:8080 -t 1carew1/cachingresttest
 
 
-psql -h localhost -p 5432 -U dbuser --password
-
-
-s
-
 docker run --name  rediscontainer -p 6379:6379 -d redis:4.0.2
 
 
@@ -40,28 +34,6 @@ docker run --name  rediscontainer -p 6379:6379 -d redis:4.0.2
 docker start rediscontainer
 docker start postgresdb
 
-
-
-# Web Ui for Docker Swarm
-
-docker service create \
---name portainer \
---publish 9000:9000 \
---constraint 'node.role == manager' \
---mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
-portainer/portainer \
--H unix:///var/run/docker.sock
-
-
-# Docker Swarm Redis
-
-docker service create \
-  --replicas 1 \
-  --publish 6379:6379 \
-  --name redisswarm \
-  --update-delay 10s \
-  --mount type=bind,src=/home/pi/CachingRestSpringBoot/redis/redis.conf,target=/usr/local/etc/redis/redis.conf \
-  redis:4.0.2 redis-server /usr/local/etc/redis/redis.conf
 
 # Old Fashioned way to run redis container
 
@@ -77,3 +49,9 @@ docker service create \
 
 # Run Memcached
 docker run --name my-memcache -p 11211:11211 -d memcached
+
+
+# Create MySQL DB
+cd .
+mkdir mysql-data
+docker run --name mysqldev-db -p 3306:3306 -v ~/mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=cachetest -e MYSQL_USER=dbuser -eMYSQL_PASSWORD=password -d mysql:5.7.21
