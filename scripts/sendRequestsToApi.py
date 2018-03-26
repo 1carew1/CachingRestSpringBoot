@@ -98,7 +98,7 @@ def finish_batch(batch_id):
     response = requests.put(base_url + batch_path + "/" + str(batch_id))
     resp_dict = json.loads(response.content)
     completion_date = resp_dict["endDate"]
-    print("The end date for the batch is : ", completion_date)
+    print("Batch Completion Date :", datetime.datetime.fromtimestamp(completion_date/1000).strftime('%Y-%m-%d %H:%M:%S'))
 
 if (__name__ == "__main__"):
     script_start = datetime.datetime.now()
