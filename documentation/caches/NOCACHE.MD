@@ -1,4 +1,4 @@
-# ehcache 2 Setup
+# No Cache Setup
 
 ## Summary
 Disable the cache through configuration.

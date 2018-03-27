@@ -4,7 +4,7 @@
 ehcache is an internal cache so it is run within the JVM so no external setup is required here.
 To use ehcache in the project the application-dev.properties or application-prod.properties file needs to be edited alongside the build.gradle file for the correct import/s.
 
-Once cache these are setup, the cache can be configured through `src/main/java/resources/ehcach2/ehcache2.xml`.
+Once these are setup, the cache can be configured through `src/main/java/resources/ehcach2/ehcache2.xml`.
 
 ## application.properties
 All other cache entries will need to be commented out from the appropriate application.properties file (dev, prod, test).
