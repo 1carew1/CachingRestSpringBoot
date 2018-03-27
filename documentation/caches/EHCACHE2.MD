@@ -37,10 +37,7 @@ Setting up the cache looks like :
            memoryStoreEvictionPolicy="LFU">
     </cache>
 ```
-`maxBytesLocalHeap` is the size of the cache.
-
-`eternal` means the cache entries do not timeout/expire. The items only get evicted when full based on the replacement policy.
-
-`overflowToDisk` determines where to store on system storage or memory only. False means memory only.
-
-`memoryStoreEvictionPolicy` is the cache replacement policy.
+- `maxBytesLocalHeap` is the size of the cache.
+- `eternal` means the cache entries do not timeout/expire. The items only get evicted when full based on the replacement policy.
+- `overflowToDisk` determines where to store on system storage or memory only. False means memory only.
+- `memoryStoreEvictionPolicy` is the cache replacement policy. The options are : `LRU`, `LFU` or `FIFO`

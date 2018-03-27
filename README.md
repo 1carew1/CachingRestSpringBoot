@@ -20,15 +20,16 @@ To run the project through a terminal, ensure you have Java installed and run :
 Note tensorflow will only work on a non ARM 64 bit OS.
 
 ### Database
-Setup the database[here](documentation/DATABASESETUP.MD)
+Setup the database [here](documentation/DATABASESETUP.MD)
 
 ### Cache
 Pick one cache from the list
 
 - [no cache](documentation/caches/NOCACHE.MD)
+- [hazelcast](documentation/caches/HAZELCAST.MD)
 - [ehcache2](documentation/caches/EHCACHE2.MD)
 
-### Obtaining Test Images
+## Obtaining Test Images
 You will need to install a program called montage and another imagemagick.
 ```
 sudo apt-get install montage
