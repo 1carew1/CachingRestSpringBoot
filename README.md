@@ -35,16 +35,16 @@ Setup the database [here](documentation/DATABASESETUP.MD)
 ### Cache
 Only Setup One
 
-**Internal Caches**
-- [no cache](documentation/caches/NOCACHE.MD)
-- [hazelcast](documentation/caches/HAZELCAST.MD)
-- [ehcache2](documentation/caches/EHCACHE2.MD)
-- [infinispan](documentation/caches/INFINISPAN.MD)
+* Internal Caches
+    * [no cache](documentation/caches/NOCACHE.MD)
+    * [hazelcast](documentation/caches/HAZELCAST.MD)
+    * [ehcache2](documentation/caches/EHCACHE2.MD)
+    * [infinispan](documentation/caches/INFINISPAN.MD)
 
-**External Caches**
-- [couchbase](documentation/caches/COUCHBASE.MD)
-- [redis](documentation/caches/REDIS.MD)
-- [memcached](documentation/caches/MEMCACHED.MD)
+* External Caches
+    * [couchbase](documentation/caches/COUCHBASE.MD)
+    * [redis](documentation/caches/REDIS.MD)
+    * [memcached](documentation/caches/MEMCACHED.MD)
 
 ## Obtaining Test Images
 You will need to install a program called montage and another imagemagick.
