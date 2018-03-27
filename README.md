@@ -23,11 +23,18 @@ Note tensorflow will only work on a non ARM 64 bit OS.
 Setup the database [here](documentation/DATABASESETUP.MD)
 
 ### Cache
-Pick one cache from the list
+Only Setup One
 
+**Internal Caches**
 - [no cache](documentation/caches/NOCACHE.MD)
 - [hazelcast](documentation/caches/HAZELCAST.MD)
 - [ehcache2](documentation/caches/EHCACHE2.MD)
+- [infinispan](documentation/caches/INFINISPAN.MD)
+
+**External Caches**
+- [couchbase](documentation/caches/COUCHBASE.MD)
+- [redis](documentation/caches/REDIS.MD)
+- [memcached](documentation/caches/MEMCACHED.MD)
 
 ## Obtaining Test Images
 You will need to install a program called montage and another imagemagick.
@@ -41,7 +48,7 @@ To download test images cd in scripts and run
 ```./generateTestImages.sh```
 
 This may take up serveral GB of storage.
-Also if you are using and IDE make sure to mark the images directory as excluded to prevent overly long indexing of the project.
+Also if you are using an IDE make sure to mark the images directory as excluded to prevent indexing of these images.
 
 ## Sending Request to the API
 The API is not secured and can be POSTed to at `/api/v1/classify` with an image as a body.
