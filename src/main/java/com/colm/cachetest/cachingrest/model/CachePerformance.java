@@ -12,7 +12,7 @@ public class CachePerformance{
     @Column (name = "id", updatable = false, nullable = false)
     private Long id;
     private Date startDate;
-    private Date finishDate;
+    private Date endDate;
     private String imageHash;
     private Boolean cacheHit;
     private String fileName;
@@ -25,9 +25,9 @@ public class CachePerformance{
     public CachePerformance () {
     }
 
-    public CachePerformance (Date startDate, Date finishDate, String imageHash, Boolean cacheHit, String fileName, Long elapsedTimeInns, CacheTestingBatch cacheTestingBatch, Long fileSizekB) {
+    public CachePerformance (Date startDate, Date endDate, String imageHash, Boolean cacheHit, String fileName, Long elapsedTimeInns, CacheTestingBatch cacheTestingBatch, Long fileSizekB) {
         this.startDate = startDate;
-        this.finishDate = finishDate;
+        this.endDate = endDate;
         this.imageHash = imageHash;
         this.cacheHit = cacheHit;
         this.fileName = fileName;
@@ -44,12 +44,12 @@ public class CachePerformance{
         this.startDate = startDate;
     }
 
-    public Date getFinishDate () {
-        return finishDate;
+    public Date getEndDate () {
+        return endDate;
     }
 
-    public void setFinishDate (Date finishDate) {
-        this.finishDate = finishDate;
+    public void setEndDate (Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getImageHash () {
