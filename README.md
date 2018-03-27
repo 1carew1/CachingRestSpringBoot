@@ -1,5 +1,15 @@
 # Spring Boot Cache Testing
 
+## Table of contents
+
+   * [Introduction](#introduction)
+   * [Dev Setup](#dev-setup)
+      * [Importing Project](#importing-project)
+      * [Database](#database)
+      * [Cache](#cache)
+   * [Obtaining Test Images ](#obtaining-test-images )
+   * [Sending Requests](#sending-requests)
+
 ## Introduction
 The purpose of this project is to be used as part of my Dissertation Experiment for Msc. in Communication Software.
 
@@ -50,7 +60,7 @@ To download test images cd in scripts and run
 This may take up serveral GB of storage.
 Also if you are using an IDE make sure to mark the images directory as excluded to prevent indexing of these images.
 
-## Sending Request to the API
+## Sending Requests
 The API is not secured and can be POSTed to at `/api/v1/classify` with an image as a body.
 
 A python script is available to fire multiple photos at the endpoint (you may need to change the url into this pythong script).
