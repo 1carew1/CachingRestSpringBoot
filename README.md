@@ -8,36 +8,27 @@ I would like to give credit to the following :
  - teracow who wrote the original Googliser Scripts for obtaining Images from Google. The repo can be found [here](https://github.com/teracow/googliser)
  - florind who has a sample Spring Boot application utilizing Tensor Flow for classifying images. The repo can be found [here](https://github.com/florind/inception-serving-sb)
 
-## Basic Dev Setup
-
-A DB will be required, if you want to use the one in place you should run :
-
-- docker create -v /var/lib/postgresql/data --name spring_app_data postgres:10.0
-- docker run --name postgresdb -p 5432:5432 --volumes-from spring_app_data -e  POSTGRES_PASSWORD=password   -d postgres:10.0
-
-You will then need to create the relevant user in this instance 
-
-- docker exec -it postgresdb su postgres -c 'psql'
-- CREATE ROLE dbuser WITH LOGIN PASSWORD 'password' ;
-- ALTER ROLE dbuser CREATEDB;
-- CREATE database cachetest;
-
-If you want to use Redis, have the projct cloned and be in the root of the project :
-
-- cd redis
-- \# Edit the redis.conf as appropriate
-- ./generateAndRunRedisContainer.sh
-
-You should now have the DB and Redis Running.
-
+## Dev Setup
+### Importing Project
 If importing the project into Intellij ensure to edit the main configuration and set active profile to `dev`. 
 For any other IDE or running the project locally you may need to set a spring parameter `-Dspring.profiles.active=dev`.
 
-To run the project through a terminal, ensure you have Java installed and that the machine is 64 bit with a 64 bit OS and run :
+To run the project through a terminal, ensure you have Java installed and run :
 
 ```SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun```
 
-## Obtaining Test Images
+Note tensorflow will only work on a non ARM 64 bit OS.
+
+### Database
+Setup the database[here](documentation/DATABASESETUP.MD)
+
+### Cache
+Pick one cache from the list
+
+- [no cache](documentation/caches/NOCACHE.MD)
+- [ehcache2](documentation/caches/EHCACHE2.MD)
+
+### Obtaining Test Images
 You will need to install a program called montage and another imagemagick.
 ```
 sudo apt-get install montage
