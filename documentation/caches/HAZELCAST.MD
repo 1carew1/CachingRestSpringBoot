@@ -1,4 +1,4 @@
-# hazelcast Setup
+# Hazelcast Setup
 
 ## Summary
 hazelcast is an internal cache so it is run within the JVM so no external setup is required here.

@@ -1,4 +1,4 @@
-# ehcache 2 Setup
+# Ehcache 2 Setup
 
 ## Summary
 ehcache is an internal cache so it is run within the JVM so no external setup is required here.

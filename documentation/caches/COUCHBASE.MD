@@ -12,7 +12,7 @@ docker run -d --name db -p 8091-8094:8091-8094 -p 11210:11210 couchbase
 - Once the docker image is running visit : `http://localhost:8091`
 - Setup a new cluster. Name it whatever you want and used default settings.
 - Once setup create a new bucket named : `cachetest`. Minimum allowed size is 100MB.
-- Go to security and add a new user `couchbaseuse` with password `password`. Give full bucket permission of the bucket that was just created.
+- Go to security and add a new user `couchbaseuser` with password `password`. Give full bucket permission of the bucket that was just created.
 
 ## application.properties
 All cache entries will need to be commented out from the appropriate application.properties file (dev, prod, test).
