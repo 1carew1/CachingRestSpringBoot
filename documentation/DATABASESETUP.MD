@@ -31,7 +31,7 @@ Ensure Docker is installed.
 
 A directory will need to be created where the DB data is stored locally.
 ```
-cd 
+cd .
 mkdir mysql-data
 ```
 
@@ -39,7 +39,11 @@ When the directory is present the MySQL instance can be run via :
 
 ```docker run --name mysqldev-db -p 3306:3306 -v ~/mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=cachetest -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=password -d mysql:5.7.21```
 
-Note the parameters. `-p` is exposing the port for MySQL. `-v` sets the data directory. `-e MYSQL_DATABASE` is the DB name, in this case is `cachetest`. `-e MYSQL_USER` is the DB user for the specified DB and `-e MYSQL_PASSWORD` is this user's password.
+Note the parameters :
+- `-p` is exposing the port for MySQL
+- `-v` sets the data directory
+- `-e MYSQL_DATABASE` is the DB name, in this case is `cachetest` 
+- `-e MYSQL_USER` is the DB user for the specified DB and `-e MYSQL_PASSWORD` is this user's password.
 
 After the initial setup the Dev DB can be run via :
 
