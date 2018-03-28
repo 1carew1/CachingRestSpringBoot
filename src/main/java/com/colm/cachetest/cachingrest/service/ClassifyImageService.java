@@ -5,7 +5,6 @@ import com.colm.cachetest.cachingrest.utils.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.tensorflow.*;
@@ -42,7 +41,7 @@ public class ClassifyImageService {
         this.scale = scale;
     }
 
-    @CachePut(value = "imageClassifications", key = "#imageHash", unless = "#result == null ")
+    @Cacheable(value = "imageClassifications", key = "#imageHash", unless = "#result == null ")
     public ClassifiedImage classifyImage(byte[] imageBytes, String imageHash) {
         boolean isImage = ImageUtils.verifyByteArrayIsImage(imageBytes);
         if (!isImage || imageBytes == null || imageHash == null) {
