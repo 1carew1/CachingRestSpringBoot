@@ -132,21 +132,47 @@ PUT to this endpoint (it does not required a body). The response should have a p
 #### /api/v1/classify/{batchId}
 This endpoint is for classifying an image and storing cache metrics.
 
+An active batch id is required (one without an end date set).
+Other than the batchId this endpoint behaves the same as `/api/v1/classify` in that you POST a MultiPart File that is an image and get back the same object.
+From the backend perspective calling this API will also save a Cache Performance entry.
 
+#### /api/v1//checkcache/{batchId}
+This is for checking if an image is already in cache. Used for seeing what keys are left in cache when finishing the batch.
+
+For this endpoint you again POST a Multipart Image File and need an active batch id.
+If the image is in cache it will return the same response as `/api/v1/classify` else it will return nothing/blank response.
+
+This will save a Cache Remainder Entity which relates to the batch to the DB if the image was in cache.
+### Recommended API Approach
+The recommended way to test a cache performance is to 
+
+- Configure the desired cache
+- Fill the cache - POST `/api/v1/classify`
+- Create a batch - POST `/api/v1/batch`
+- Run Test Sequence of Images - POST `/api/v1/classify/{batchId}`
+- Once Sequence is finished Check what is left in cache - POST `/api/v1//checkcache/{batchId}`
+- Finish the batch - PUT `/api/v1/batch/{batchId}`
+
+Note for filling, testing and checking remainder you will need to send many of each of those request.
 
 ### Python
-The API is not secured and can be POSTed to at `/api/v1/classify` with an image as a body.
 
-A python script is available to fire multiple photos at the endpoint (you may need to change the url into this pythong script).
-Note you will need python installed for this.
+A python script is available for sending the images obtained earlier and testing the cache. Note you may want to change URLs or file paths to suit your setup.
+
+You will need python3 installed for this.
 
 - cd scripts
-- python sendRequestsToApi.py
+- python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY
+
+CACHE_TYPE is the cache being used in the test : ehcache, redis, memcached etc.
+
+CACHE_SIZE_MB is the size of the cache in megabytes.
+
+EVICTION_POLICY is the cache eviction policy being used : LRU, LFU etc.
+
+These 3 parameters need to be entered manually and should correspond to what is setup in the cache under test.
 
 If you get any errors relating to imports you may need to install them such as :
 - sudo apt-get install python-setuptools
 - sudo easy_install pip
 - sudo pip install requests
-
-This will write some information on the image processing to DB (when it started/finished, processing time ns (probably only ms accurate), cache hit t/f).
-
