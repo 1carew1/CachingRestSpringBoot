@@ -9,7 +9,8 @@
       * [Cache](#cache)
    * [Obtaining Test Images ](#obtaining-test-images )
    * [Sending Requests](#sending-requests)
-
+      * [The API](#the-api)
+      * [Python](#python)
 ## Introduction
 The purpose of this project is to be used as part of my Dissertation Experiment for Msc. in Communication Software.
 
@@ -61,6 +62,79 @@ This may take up serveral GB of storage.
 Also if you are using an IDE make sure to mark the images directory as excluded to prevent indexing of these images.
 
 ## Sending Requests
+
+### The API
+The API is not secured. There are currently 5 endpoints :
+- `/api/v1/classify` - POST
+- `/api/v1/batch` - POST
+- `/api/v1/batch/{batchId}` - PUT
+- `/api/v1/classify/{batchId}` - POST
+- `/api/v1//checkcache/{batchId}` - POST
+
+#### /api/v1/classify
+This endpoint is for classifying an image.
+
+POST a Multipart File (which should be an image) to this endpoint.
+It will classify the image and return : 
+
+```
+{
+    "label": "IMAGE_LABEL",
+    "probability": PERCENT_PROBABILITY,
+    "imageDataPoints" : "BYTE_ARRAY_OF_IMAGE"
+}
+```
+Note this will place the image into the cache but will not store any performance metrics to the db.
+Mostly this endpoint will be used for filling the cache before testing.
+
+#### /api/v1/batch
+This endpoint is for creating a test batch (a way of grouping images into the same test setup).
+
+POST a Batch Info Object (as JSON) to this endpoint. a Batch Info Object will look like :
+
+```
+{
+	"cacheType" : "ehcache",
+	"cacheSizeMb" : "10",
+	"evictionPolicy" : "LRU"
+}
+```
+
+The response from this endpoint should look like :
+
+```
+{
+    "id": 10,
+    "startDate": 1522424289239,
+    "cacheType": "ehcache",
+    "cacheSizeMb": "10",
+    "evictionPolicy": "LRU",
+    "endDate": null
+}
+```
+
+#### /api/v1/batch/{batchId}
+This endpoint is for finishing the batch so no more images can be added to it.
+
+PUT to this endpoint (it does not required a body). The response should have a populated end date :
+
+```
+{
+    "id": 10,
+    "startDate": 1522424289000,
+    "cacheType": "ehcache",
+    "cacheSizeMb": "10",
+    "evictionPolicy": "LRU",
+    "endDate": 1522424562712
+}
+```
+
+#### /api/v1/classify/{batchId}
+This endpoint is for classifying an image and storing cache metrics.
+
+
+
+### Python
 The API is not secured and can be POSTed to at `/api/v1/classify` with an image as a body.
 
 A python script is available to fire multiple photos at the endpoint (you may need to change the url into this pythong script).
