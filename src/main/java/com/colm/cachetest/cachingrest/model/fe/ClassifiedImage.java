@@ -1,4 +1,4 @@
-package com.colm.cachetest.cachingrest.model;
+package com.colm.cachetest.cachingrest.model.fe;
 
 import java.io.Serializable;
 

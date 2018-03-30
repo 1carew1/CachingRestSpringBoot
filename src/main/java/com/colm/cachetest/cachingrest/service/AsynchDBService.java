@@ -1,7 +1,7 @@
 package com.colm.cachetest.cachingrest.service;
 
-import com.colm.cachetest.cachingrest.model.CachePerformance;
-import com.colm.cachetest.cachingrest.model.CacheRemainder;
+import com.colm.cachetest.cachingrest.model.db.CachePerformance;
+import com.colm.cachetest.cachingrest.model.db.CacheRemainder;
 import com.colm.cachetest.cachingrest.repository.CachePerformanceRepository;
 import com.colm.cachetest.cachingrest.repository.CacheRemainderRepository;
 import com.colm.cachetest.cachingrest.threads.EntitySaver;

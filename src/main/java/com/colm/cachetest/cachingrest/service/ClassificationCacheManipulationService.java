@@ -1,10 +1,10 @@
 package com.colm.cachetest.cachingrest.service;
 
 
-import com.colm.cachetest.cachingrest.model.CachePerformance;
-import com.colm.cachetest.cachingrest.model.CacheRemainder;
-import com.colm.cachetest.cachingrest.model.CacheTestingBatch;
-import com.colm.cachetest.cachingrest.model.ClassifiedImage;
+import com.colm.cachetest.cachingrest.model.db.CachePerformance;
+import com.colm.cachetest.cachingrest.model.db.CacheRemainder;
+import com.colm.cachetest.cachingrest.model.db.CacheTestingBatch;
+import com.colm.cachetest.cachingrest.model.fe.ClassifiedImage;
 import com.colm.cachetest.cachingrest.utils.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

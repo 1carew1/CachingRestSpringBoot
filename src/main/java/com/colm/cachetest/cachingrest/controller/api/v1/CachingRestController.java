@@ -1,14 +1,12 @@
 package com.colm.cachetest.cachingrest.controller.api.v1;
 
 
-import com.colm.cachetest.cachingrest.model.CacheTestingBatch;
-import com.colm.cachetest.cachingrest.model.ClassifiedImage;
+import com.colm.cachetest.cachingrest.model.db.CacheTestingBatch;
+import com.colm.cachetest.cachingrest.model.fe.BatchInfo;
+import com.colm.cachetest.cachingrest.model.fe.ClassifiedImage;
 import com.colm.cachetest.cachingrest.service.CacheTestingBatchService;
 import com.colm.cachetest.cachingrest.service.ClassificationCacheManipulationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,30 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1")
 public class CachingRestController {
 
-    private static final Logger log = LoggerFactory.getLogger(CachingRestController.class);
-    private static final String UNKNOWN = "UNKNOWN";
-
     @Autowired
     private ClassificationCacheManipulationService classificationService;
     @Autowired
     private CacheTestingBatchService batchService;
 
-    @Value("${spring.cache.type:UNKNOWN}")
-    private String cacheType;
-
-    @Value("${memcached.cache.mode:UNKNOWN}")
-    private String memcached;
-
     // create a batch
     @PostMapping(value = "/batch")
     @CrossOrigin(origins = "*")
-    public CacheTestingBatch createBatch(@RequestBody(required = false) String setupComment) {
-        String type = cacheType;
-        if (!memcached.equals(UNKNOWN)) {
-            type = "memcached";
-        }
-        log.info("Creating Batch");
-        return batchService.createBatch(type, setupComment);
+    public CacheTestingBatch createBatch(@RequestBody BatchInfo batchInfo) {
+        return batchService.createBatch(batchInfo);
     }
 
     // finish the batch

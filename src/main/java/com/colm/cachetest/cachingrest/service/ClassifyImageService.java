@@ -1,6 +1,6 @@
 package com.colm.cachetest.cachingrest.service;
 
-import com.colm.cachetest.cachingrest.model.ClassifiedImage;
+import com.colm.cachetest.cachingrest.model.fe.ClassifiedImage;
 import com.colm.cachetest.cachingrest.utils.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +17,6 @@ import java.util.List;
 //Inspired from https://github.com/tensorflow/tensorflow/blob/master/tensorflow/java/src/main/java/org/tensorflow/examples/LabelImage.java
 @Service
 public class ClassifyImageService {
-
-    private static final Logger log = LoggerFactory.getLogger(ClassifyImageService.class);
 
     private final Graph inceptionGraph;
     private final List<String> labels;

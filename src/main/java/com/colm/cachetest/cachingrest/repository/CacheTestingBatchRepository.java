@@ -1,6 +1,6 @@
 package com.colm.cachetest.cachingrest.repository;
 
-import com.colm.cachetest.cachingrest.model.CacheTestingBatch;
+import com.colm.cachetest.cachingrest.model.db.CacheTestingBatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

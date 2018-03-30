@@ -1,4 +1,4 @@
-package com.colm.cachetest.cachingrest.model;
+package com.colm.cachetest.cachingrest.model.db;
 
 import javax.persistence.*;
 import java.util.Date;

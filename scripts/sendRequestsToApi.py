@@ -19,13 +19,29 @@ request_headers = {
     'cache-control': 'private, max-age=0, no-cache'
 }
 
+request_headers_json = {
+    'Content-type': 'application/json',
+    'cache-control': 'private, max-age=0, no-cache'
+}
+
+
+class BatchInfo():
+    cacheType = None
+    cacheSizeMb = None
+    evictionPolicy = None
+
+    def __init__(self, cache_type, cache_size_mb, eviction_policy):
+        self.cacheType = cache_type
+        self.cacheSizeMb = cache_size_mb
+        self.evictionPolicy = eviction_policy
 
 # Obtain a random image a post to the endpoint
 # random_photo = random.choice(imageLocations)
 
 # Get the batch
-def obtain_batch_id(setup_comment):
-    response = requests.post(base_url + batch_path, data=setup_comment, headers=request_headers)
+def obtain_batch_id(batch_info):
+    json_data_to_send = json.dumps(batch_info, default=lambda o: o.__dict__)
+    response = requests.post(base_url + batch_path, data=json_data_to_send, headers=request_headers_json)
     resp_dict = json.loads(response.content)
     batch_id = resp_dict["id"]
     print("The batch id for this run is : ", batch_id)
@@ -104,10 +120,15 @@ if (__name__ == "__main__"):
     script_start = datetime.datetime.now()
     print("Start Time : ", script_start)
 
-    setup_comment = "Dry Run"
-    if (len(sys.argv) >= 2):
-        setup_comment = sys.argv[1]
-    batch_id = obtain_batch_id(setup_comment)
+    batch_info = None
+    if (len(sys.argv) >= 4):
+        cache_type = sys.argv[1]
+        cache_size_mb = sys.argv[2]
+        eviction_policy = sys.argv[3]
+        batch_info = BatchInfo(cache_type, cache_size_mb, eviction_policy)
+    else :
+        raise Exception('In valid number of arguments should be : python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY')
+    batch_id = obtain_batch_id(batch_info)
     file_pool = obtain_file_list(images_dir)
 
     # Classify the images

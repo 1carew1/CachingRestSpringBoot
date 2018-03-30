@@ -1,4 +1,4 @@
-package com.colm.cachetest.cachingrest.model;
+package com.colm.cachetest.cachingrest.model.db;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,15 +13,18 @@ public class CacheTestingBatch {
     private Long id;
     private Date startDate = new Date();
     private String cacheType;
-    private String setupComment;
+    private String cacheSizeMb;
+    private String evictionPolicy;
     private Date endDate;
 
     public CacheTestingBatch () {
     }
 
-    public CacheTestingBatch (String cacheType, String setupComment) {
+    public CacheTestingBatch(String cacheType, String cacheSizeMb, String evictionPolicy) {
+        this.startDate = new Date();
         this.cacheType = cacheType;
-        this.setupComment = setupComment;
+        this.cacheSizeMb = cacheSizeMb;
+        this.evictionPolicy = evictionPolicy;
     }
 
     public Long getId() {
@@ -40,12 +43,12 @@ public class CacheTestingBatch {
         this.cacheType = cacheType;
     }
 
-    public String getSetupComment() {
-        return setupComment;
+    public String getCacheSizeMb() {
+        return cacheSizeMb;
     }
 
-    public void setSetupComment(String setupComment) {
-        this.setupComment = setupComment;
+    public void setCacheSizeMb(String cacheSizeMb) {
+        this.cacheSizeMb = cacheSizeMb;
     }
 
     public Date getEndDate() {
@@ -54,5 +57,17 @@ public class CacheTestingBatch {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEvictionPolicy() {
+        return evictionPolicy;
+    }
+
+    public void setEvictionPolicy(String evictionPolicy) {
+        this.evictionPolicy = evictionPolicy;
     }
 }

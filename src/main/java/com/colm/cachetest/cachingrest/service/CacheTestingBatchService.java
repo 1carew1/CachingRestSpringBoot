@@ -1,7 +1,8 @@
 package com.colm.cachetest.cachingrest.service;
 
 
-import com.colm.cachetest.cachingrest.model.CacheTestingBatch;
+import com.colm.cachetest.cachingrest.model.db.CacheTestingBatch;
+import com.colm.cachetest.cachingrest.model.fe.BatchInfo;
 import com.colm.cachetest.cachingrest.repository.CacheTestingBatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,11 @@ public class CacheTestingBatchService {
         return cacheTestingBatch;
     }
 
-    public CacheTestingBatch createBatch(String cacheType, String setupComment) {
-        String sC = "Dry Run";
-        if(setupComment != null && !setupComment.isEmpty()) {
-            sC = setupComment;
+    public CacheTestingBatch createBatch(BatchInfo batchInfo) {
+        if(batchInfo == null) {
+            return null;
         }
-        CacheTestingBatch cacheTestingBatch = new CacheTestingBatch(cacheType, sC);
+        CacheTestingBatch cacheTestingBatch = new CacheTestingBatch(batchInfo.getCacheType(), batchInfo.getCacheSizeMb(), batchInfo.getEvictionPolicy());
         cacheTestingBatchRepository.save(cacheTestingBatch);
         return cacheTestingBatch;
     }
