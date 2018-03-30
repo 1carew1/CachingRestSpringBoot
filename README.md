@@ -13,7 +13,7 @@
       * [Recommended API Approach](#recommended-api-approach)
       * [Python](#python)
 ## Introduction
-The purpose of this project is to be used as part of my Dissertation Experiment for Msc. in Communication Software.
+The purpose of this project is to obtain cache performance data as to investigate cache performance for varying eviction algorithms and cache sizes.
 
 I would like to give credit to the following : 
 
@@ -49,17 +49,20 @@ Only Setup One
     * [memcached](documentation/caches/MEMCACHED.MD)
 
 ## Obtaining Test Images
-You will need to install a program called montage and another imagemagick.
+imagemagick with montage is required for obtaining the test images.
 ```
-sudo apt-get install montage
 sudo apt-get install imagemagick
+sudo apt-get install montage
 ```
 
-To download test images cd in scripts and run 
+To download test images cd into scripts and run 
 
 ```./generateTestImages.sh```
 
+This script calls python3 scrips so python3 will need to be installed if it is not already.
+
 This may take up serveral GB of storage.
+
 Also if you are using an IDE make sure to mark the images directory as excluded to prevent indexing of these images.
 
 ## Sending Requests
@@ -73,7 +76,7 @@ The API is not secured. There are currently 5 endpoints :
 - `/api/v1//checkcache/{batchId}` - POST
 
 #### /api/v1/classify
-This endpoint is for classifying an image.
+This endpoint is for classifying an image. Note currently only PNGs and JPEG/JPGs are being used for testing, GIFs are not supported.
 
 POST a Multipart File (which should be an image) to this endpoint.
 It will classify the image and return : 
