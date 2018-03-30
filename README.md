@@ -10,6 +10,7 @@
    * [Obtaining Test Images ](#obtaining-test-images )
    * [Sending Requests](#sending-requests)
       * [The API](#the-api)
+      * [Recommended API Approach](#recommended-api-approach)
       * [Python](#python)
 ## Introduction
 The purpose of this project is to be used as part of my Dissertation Experiment for Msc. in Communication Software.
@@ -144,13 +145,13 @@ If the image is in cache it will return the same response as `/api/v1/classify` 
 
 This will save a Cache Remainder Entity which relates to the batch to the DB if the image was in cache.
 ### Recommended API Approach
-The recommended way to test a cache performance is to 
+The recommended way to test cache performance is to 
 
 - Configure the desired cache
 - Fill the cache - POST `/api/v1/classify`
 - Create a batch - POST `/api/v1/batch`
 - Run Test Sequence of Images - POST `/api/v1/classify/{batchId}`
-- Once Sequence is finished Check what is left in cache - POST `/api/v1//checkcache/{batchId}`
+- Once Sequence is finished check what is left in cache - POST `/api/v1//checkcache/{batchId}`
 - Finish the batch - PUT `/api/v1/batch/{batchId}`
 
 Note for filling, testing and checking remainder you will need to send many of each of those request.
