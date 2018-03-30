@@ -17,8 +17,8 @@ The purpose of this project is to obtain cache performance data as to investigat
 
 I would like to give credit to the following : 
 
- - teracow who wrote the original Googliser Scripts for obtaining Images from Google. The repo can be found [here](https://github.com/teracow/googliser)
- - florind who has a sample Spring Boot application utilizing Tensor Flow for classifying images. The repo can be found [here](https://github.com/florind/inception-serving-sb)
+ - [teracow](https://github.com/teracow) who wrote the original Googliser Scripts for obtaining Images from Google. The repo can be found [here](https://github.com/teracow/googliser)
+ - [florind](https://github.com/florind) who has a sample Spring Boot application utilizing Tensor Flow for classifying images. The repo can be found [here](https://github.com/florind/inception-serving-sb)
 
 ## Dev Setup
 ### Importing Project
