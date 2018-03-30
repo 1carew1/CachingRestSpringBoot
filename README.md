@@ -165,18 +165,20 @@ A python script is available for sending the images obtained earlier and testing
 
 You will need python3 installed for this.
 
-- cd scripts
-- python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY
+```
+cd scripts
+python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY
+```
 
-CACHE_TYPE is the cache being used in the test : ehcache, redis, memcached etc.
-
-CACHE_SIZE_MB is the size of the cache in megabytes.
-
-EVICTION_POLICY is the cache eviction policy being used : LRU, LFU etc.
+- `CACHE_TYPE` is the cache being used in the test : ehcache, redis, memcached etc.
+- `CACHE_SIZE_MB` is the size of the cache in megabytes.
+- `EVICTION_POLICY` is the cache eviction policy being used : LRU, LFU etc.
 
 These 3 parameters need to be entered manually and should correspond to what is setup in the cache under test.
 
 If you get any errors relating to imports you may need to install them such as :
-- sudo apt-get install python-setuptools
-- sudo easy_install pip
-- sudo pip install requests
+```
+sudo apt-get install python-setuptools
+sudo easy_install pip
+sudo pip install requests
+```
