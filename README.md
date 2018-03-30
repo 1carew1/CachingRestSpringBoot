@@ -73,7 +73,7 @@ The API is not secured. There are currently 5 endpoints :
 - `/api/v1/batch` - POST
 - `/api/v1/batch/{batchId}` - PUT
 - `/api/v1/classify/{batchId}` - POST
-- `/api/v1//checkcache/{batchId}` - POST
+- `/api/v1/checkcache/{batchId}` - POST
 
 #### /api/v1/classify
 This endpoint is for classifying an image. 
@@ -98,7 +98,7 @@ This endpoint should be used for filling the cache before testing.
 #### /api/v1/batch
 This endpoint is for creating a test batch (a way of grouping images into the same test setup).
 
-POST a Batch Info Object (as JSON) to this endpoint. a Batch Info Object will look like :
+POST a Batch Info Object (as JSON) to this endpoint. A Batch Info Object should look like :
 
 ```
 {
@@ -144,7 +144,7 @@ An active batch id is required (one without an end date set).
 Other than the batchId this endpoint behaves the same as `/api/v1/classify` in that you POST a MultiPart File that is an image and get back the same object.
 From the backend perspective calling this API will also save a Cache Performance entry.
 
-#### /api/v1//checkcache/{batchId}
+#### /api/v1/checkcache/{batchId}
 This is for checking if an image is already in cache. Used for seeing what keys are left in cache when finishing the batch.
 
 For this endpoint you again POST a Multipart Image File and need an active batch id.
@@ -158,7 +158,7 @@ The recommended way to test cache performance is to
 - Fill the cache - POST `/api/v1/classify`
 - Create a batch - POST `/api/v1/batch`
 - Run Test Sequence of Images - POST `/api/v1/classify/{batchId}`
-- Once Sequence is finished check what is left in cache - POST `/api/v1//checkcache/{batchId}`
+- Once Sequence is finished check what is left in cache - POST `/api/v1/checkcache/{batchId}`
 - Finish the batch - PUT `/api/v1/batch/{batchId}`
 
 Note : for filling, testing and checking remainder you will need to send many of each of those request.
