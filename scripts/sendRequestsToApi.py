@@ -81,7 +81,9 @@ def obtain_classification_from_json(the_json):
 def obtain_classification(file_path, file_contents, batch_id, request_path):
     classification = None
     files = {'file': (file_path, file_contents)}
-    image_endpoint = base_url + request_path + "/" + str(batch_id)
+    image_endpoint = base_url + request_path + "/"
+    if(batch_id is not None) :
+        image_endpoint = image_endpoint + str(batch_id)
     try:
         response = requests.post(image_endpoint, files=files, headers=request_headers)
         classification = obtain_classification_from_json(response.content)
@@ -108,6 +110,29 @@ def send_image_requests(file_list, batch_id, request_path):
     print("Number of images processed successfully: ", number_of_images_processed)
     print("Number of images that failed to process: ", number_of_images_not_processed)
 
+# Fill the Cache
+def fill_cache(file_list, cache_size_mb) :
+    print("Filling Cache. The cache size is : ", cache_size_mb, "MB")
+    cache_size_bytes = float(cache_size_mb) * 1024 * 1024
+    total_bytes_sent = 0
+    number_of_images_processed = 0
+    number_of_images_not_processed = 0
+    for image_location in file_list:
+        if(total_bytes_sent > cache_size_bytes) :
+            break
+        file_size_bytes = os.stat(image_location).st_size
+        file_contents = obtain_file_contents(image_location)
+        if (file_contents is not None):
+            classification = obtain_classification(image_location, file_contents, None, classify_image_path)
+            if (classification is not None):
+                number_of_images_processed = number_of_images_processed + 1
+                total_bytes_sent = total_bytes_sent + file_size_bytes
+                print (classify_image_path, ": ", number_of_images_processed,  " ",  image_location, " Label :", classification['label'], " Probability : ", classification['probability'])
+            else:
+                number_of_images_not_processed = number_of_images_not_processed + 1
+    print("Number of images cached successfully: ", number_of_images_processed)
+    print("Number of images that failed to cached: ", number_of_images_not_processed)
+    print("MB sent to fill cache : ", (total_bytes_sent/(1024*1024)))
 
 # Complete the batch
 def finish_batch(batch_id):
@@ -117,9 +142,6 @@ def finish_batch(batch_id):
     print("Batch Completion Date :", datetime.datetime.fromtimestamp(completion_date/1000).strftime('%Y-%m-%d %H:%M:%S'))
 
 if (__name__ == "__main__"):
-    script_start = datetime.datetime.now()
-    print("Start Time : ", script_start)
-
     batch_info = None
     if (len(sys.argv) >= 4):
         cache_type = sys.argv[1]
@@ -128,10 +150,19 @@ if (__name__ == "__main__"):
         batch_info = BatchInfo(cache_type, cache_size_mb, eviction_policy)
     else :
         raise Exception('In valid number of arguments should be : python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY')
-    batch_id = obtain_batch_id(batch_info)
+
+    script_start = datetime.datetime.now()
+    print("Start Time : ", script_start)
+
     file_pool = obtain_file_list(images_dir)
 
-    # Classify the images
+    # Fill the cache
+    fill_cache(file_pool, batch_info.cacheSizeMb)
+
+    # Create a batch
+    batch_id = obtain_batch_id(batch_info)
+
+    # Test the cache by classifying images
     send_image_requests(file_pool, batch_id, classify_image_path)
     # Check Whats left in Cache
     send_image_requests(file_pool, batch_id, check_cache_path)
