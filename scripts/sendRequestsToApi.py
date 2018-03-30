@@ -61,7 +61,9 @@ def obtain_file_list(dirpath):
 def obtain_file_contents(file_path):
     file_contents = None
     statinfo = os.stat(file_path)
-    if statinfo.st_size < 10485760 and "gif" not in file_path and ".DS_Store" not in file_path:
+    lower_case_file_path = file_path.lower()
+    # The API can not classify images over 10MB
+    if statinfo.st_size < (10 * 1024 * 1024) and ((lower_case_file_path.endswith('.jpeg')) or (lower_case_file_path.endswith('.jpg')) or (lower_case_file_path.endswith('.png'))):
         file = open(file_path, 'rb')
         file_contents = file.read()
     return file_contents
