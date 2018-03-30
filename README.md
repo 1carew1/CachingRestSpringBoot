@@ -29,7 +29,7 @@ To run the project through a terminal, ensure you have Java installed and run :
 
 ```SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun```
 
-Note tensorflow will only work on a non ARM 64 bit OS.
+Note : tensorflow will only work on a non ARM 64 bit OS.
 
 ### Database
 Setup the database [here](documentation/DATABASESETUP.MD)
@@ -76,7 +76,9 @@ The API is not secured. There are currently 5 endpoints :
 - `/api/v1//checkcache/{batchId}` - POST
 
 #### /api/v1/classify
-This endpoint is for classifying an image. Note currently only PNGs and JPEG/JPGs are being used for testing, GIFs are not supported.
+This endpoint is for classifying an image. 
+
+Note : currently only PNGs and JPEG/JPGs are being used for testing, GIFs are not supported.
 
 POST a Multipart File (which should be an image) to this endpoint.
 It will classify the image and return : 
@@ -88,8 +90,10 @@ It will classify the image and return :
     "imageDataPoints" : "BYTE_ARRAY_OF_IMAGE"
 }
 ```
-Note this will place the image into the cache but will not store any performance metrics to the db.
-Mostly this endpoint will be used for filling the cache before testing.
+
+Note : this will place the image into the cache but will not store any performance metrics to the db.
+
+This endpoint should be used for filling the cache before testing.
 
 #### /api/v1/batch
 This endpoint is for creating a test batch (a way of grouping images into the same test setup).
@@ -157,11 +161,13 @@ The recommended way to test cache performance is to
 - Once Sequence is finished check what is left in cache - POST `/api/v1//checkcache/{batchId}`
 - Finish the batch - PUT `/api/v1/batch/{batchId}`
 
-Note for filling, testing and checking remainder you will need to send many of each of those request.
+Note : for filling, testing and checking remainder you will need to send many of each of those request.
 
 ### Python
 
-A python script is available for sending the images obtained earlier and testing the cache. Note you may want to change URLs or file paths to suit your setup.
+A python script is available for sending the images obtained earlier and testing the cache. 
+
+Note : you may want to change URLs or file paths to suit your setup.
 
 You will need python3 installed for this.
 
