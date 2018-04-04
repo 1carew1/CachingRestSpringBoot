@@ -31,15 +31,15 @@ To run the project through a terminal, ensure you have Java installed and run :
 
 Note : tensorflow will only work on a non ARM 64 bit OS.
 
-The project can be built from the root of the project via :
+The project can be built from the root via :
 
 ```./gradlew build```
 
-Once build the jar can be run from the root of the project via :
+Once built, the jar can be run from the root of the project via :
 
 ```java -Xmx3072m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar```
 
-Note : `-Xmx3072m` will set the heap to 3GB. The caching solution should not be more than 80% of the heap.
+Note : `-Xmx3072m` will set the heap to 3GB. The cache size should not be more than 80% of the heap (this only apply to internal caches).
 
 ### Database
 Setup the database [here](documentation/DATABASESETUP.MD)
