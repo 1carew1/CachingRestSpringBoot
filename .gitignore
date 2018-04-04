@@ -28,3 +28,7 @@ out/
 
 # Images
 images/
+
+# Log Files
+*.log
+scripts/*.log
