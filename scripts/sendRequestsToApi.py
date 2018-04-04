@@ -46,7 +46,7 @@ def seconds_difference_between_dates(date1, date2):
 def obtain_batch_id(batch_info):
     json_data_to_send = json.dumps(batch_info, default=lambda o: o.__dict__)
     response = requests.post(base_url + batch_path, data=json_data_to_send, headers=request_headers_json)
-    resp_dict = json.loads(response.content)
+    resp_dict = json.loads(response.content.decode('utf-8'))
     batch_id = resp_dict["id"]
     print("The batch id for this run is : ", batch_id)
     return batch_id
@@ -80,7 +80,7 @@ def obtain_classification_from_json(the_json):
     classification = None
     if (the_json is not None):
         try:
-            classification = json.loads(the_json)
+            classification = json.loads(the_json.decode('utf-8'))
         except ValueError:
             classification = None
     return classification
@@ -183,7 +183,7 @@ def fill_cache(file_list, cache_size_mb):
 # Complete the batch
 def finish_batch(batch_id):
     response = requests.put(base_url + batch_path + "/" + str(batch_id))
-    resp_dict = json.loads(response.content)
+    resp_dict = json.loads(response.content.decode('utf-8'))
     completion_date = resp_dict["endDate"]
     print(
     "Batch Completion Date :", datetime.datetime.fromtimestamp(completion_date / 1000).strftime('%Y-%m-%d %H:%M:%S'))
