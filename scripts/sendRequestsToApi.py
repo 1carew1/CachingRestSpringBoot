@@ -24,6 +24,7 @@ request_headers_json = {
     'cache-control': 'private, max-age=0, no-cache'
 }
 
+
 class BatchInfo():
     cacheType = None
     cacheSizeMb = None
@@ -34,10 +35,12 @@ class BatchInfo():
         self.cacheSizeMb = cache_size_mb
         self.evictionPolicy = eviction_policy
 
+
 # Get time difference in second
 def seconds_difference_between_dates(date1, date2):
     time_diff = date1 - date2
     return int(time_diff.total_seconds())
+
 
 # Get the batch
 def obtain_batch_id(batch_info):
@@ -64,16 +67,19 @@ def obtain_file_contents(file_path):
     statinfo = os.stat(file_path)
     lower_case_file_path = file_path.lower()
     # The API can not classify images over 10MB
-    if statinfo.st_size < (10 * 1024 * 1024) and ((lower_case_file_path.endswith('.jpeg')) or (lower_case_file_path.endswith('.jpg')) or (lower_case_file_path.endswith('.png'))):
+    if statinfo.st_size < (10 * 1024 * 1024) and (
+            (lower_case_file_path.endswith('.jpeg')) or (lower_case_file_path.endswith('.jpg')) or (
+    lower_case_file_path.endswith('.png'))):
         file = open(file_path, 'rb')
         file_contents = file.read()
     return file_contents
 
+
 # Obtain Classification From JSON
 def obtain_classification_from_json(the_json):
     classification = None
-    if(the_json is not None):
-        try :
+    if (the_json is not None):
+        try:
             classification = json.loads(the_json)
         except ValueError:
             classification = None
@@ -85,7 +91,7 @@ def obtain_classification(file_path, file_contents, batch_id, request_path):
     classification = None
     files = {'file': (file_path, file_contents)}
     image_endpoint = base_url + request_path + "/"
-    if(batch_id is not None) :
+    if (batch_id is not None):
         image_endpoint = image_endpoint + str(batch_id)
     try:
         response = requests.post(image_endpoint, files=files, headers=request_headers)
@@ -93,6 +99,7 @@ def obtain_classification(file_path, file_contents, batch_id, request_path):
     except ConnectionError:
         print("Issue Posting : ", image_endpoint)
     return classification
+
 
 # Send the Requests of all the images
 def check_cache(file_list, batch_id, request_path):
@@ -105,7 +112,8 @@ def check_cache(file_list, batch_id, request_path):
             classification = obtain_classification(image_location, file_contents, batch_id, request_path)
             if (classification is not None):
                 number_of_images_processed = number_of_images_processed + 1
-                print (request_path, ": ", number_of_images_processed,  " ",  image_location, " Label :", classification['label'], " Probability : ", classification['probability'])
+                print (request_path, ": ", number_of_images_processed, " ", image_location, " Label :",
+                       classification['label'], " Probability : ", classification['probability'])
             else:
                 number_of_images_not_processed = number_of_images_not_processed + 1
         else:
@@ -113,21 +121,24 @@ def check_cache(file_list, batch_id, request_path):
     print("Number of images cache: ", number_of_images_processed)
     print("Number of images that failed to retrieve: ", number_of_images_not_processed)
 
+
 # Send the Requests of all the images
 def send_image_requests(file_list, batch_id, request_path, run_time_seconds):
-    print("Time to test classification : ", run_time_seconds/60, " minutes")
+    print("Time to test classification : ", run_time_seconds / 60, " minutes")
     number_of_images_processed = 0
     number_of_images_not_processed = 0
     classify_start = datetime.datetime.now()
     classify_current = datetime.datetime.now()
-    while(seconds_difference_between_dates(classify_current, classify_start) <  run_time_seconds) :
+    while (seconds_difference_between_dates(classify_current, classify_start) < run_time_seconds):
         random_photo = random.choice(file_list)
         file_contents = obtain_file_contents(random_photo)
         if (file_contents is not None):
             classification = obtain_classification(random_photo, file_contents, batch_id, request_path)
             if (classification is not None):
                 number_of_images_processed = number_of_images_processed + 1
-                print (request_path, ": ", number_of_images_processed,  " ",  random_photo, " Label :", classification['label'], " Probability : ", classification['probability'])
+                print (
+                request_path, ": ", number_of_images_processed, " ", random_photo, " Label :", classification['label'],
+                " Probability : ", classification['probability'])
             else:
                 number_of_images_not_processed = number_of_images_not_processed + 1
         else:
@@ -135,10 +146,11 @@ def send_image_requests(file_list, batch_id, request_path, run_time_seconds):
         classify_current = datetime.datetime.now()
     print("Number of images processed successfully: ", number_of_images_processed)
     print("Number of images that failed to process: ", number_of_images_not_processed)
-    print("Time testing images : ", seconds_difference_between_dates(classify_current, classify_start)/60)
+    print("Time testing images : ", seconds_difference_between_dates(classify_current, classify_start) / 60)
+
 
 # Fill the Cache
-def fill_cache(file_list, cache_size_mb) :
+def fill_cache(file_list, cache_size_mb):
     fill_cache_start = datetime.datetime.now()
     print("Fill Cache Start Time : ", fill_cache_start)
     print("Filling Cache. The cache size is : ", cache_size_mb, "MB")
@@ -147,7 +159,7 @@ def fill_cache(file_list, cache_size_mb) :
     number_of_images_processed = 0
     number_of_images_not_processed = 0
     for image_location in file_list:
-        if(total_bytes_sent > cache_size_bytes) :
+        if (total_bytes_sent > cache_size_bytes):
             break
         file_size_bytes = os.stat(image_location).st_size
         file_contents = obtain_file_contents(image_location)
@@ -156,22 +168,26 @@ def fill_cache(file_list, cache_size_mb) :
             if (classification is not None):
                 number_of_images_processed = number_of_images_processed + 1
                 total_bytes_sent = total_bytes_sent + file_size_bytes
-                print (classify_image_path, ": ", number_of_images_processed,  " ",  image_location, " Label :", classification['label'], " Probability : ", classification['probability'])
+                print (classify_image_path, ": ", number_of_images_processed, " ", image_location, " Label :",
+                       classification['label'], " Probability : ", classification['probability'])
             else:
                 number_of_images_not_processed = number_of_images_not_processed + 1
     print("Number of images cached successfully: ", number_of_images_processed)
     print("Number of images that failed to cached: ", number_of_images_not_processed)
-    print("MB sent to fill cache : ", (total_bytes_sent/(1024*1024)))
+    print("MB sent to fill cache : ", (total_bytes_sent / (1024 * 1024)))
     fill_cache_end = datetime.datetime.now()
     time_diff_seconds = seconds_difference_between_dates(fill_cache_end, fill_cache_start)
     return time_diff_seconds
+
 
 # Complete the batch
 def finish_batch(batch_id):
     response = requests.put(base_url + batch_path + "/" + str(batch_id))
     resp_dict = json.loads(response.content)
     completion_date = resp_dict["endDate"]
-    print("Batch Completion Date :", datetime.datetime.fromtimestamp(completion_date/1000).strftime('%Y-%m-%d %H:%M:%S'))
+    print(
+    "Batch Completion Date :", datetime.datetime.fromtimestamp(completion_date / 1000).strftime('%Y-%m-%d %H:%M:%S'))
+
 
 if (__name__ == "__main__"):
     batch_info = None
@@ -180,8 +196,9 @@ if (__name__ == "__main__"):
         cache_size_mb = sys.argv[2]
         eviction_policy = sys.argv[3]
         batch_info = BatchInfo(cache_type, cache_size_mb, eviction_policy)
-    else :
-        raise Exception('In valid number of arguments should be : python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY')
+    else:
+        raise Exception(
+            'In valid number of arguments should be : python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY')
 
     script_start = datetime.datetime.now()
     print("Start Time : ", script_start)

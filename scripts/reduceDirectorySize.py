@@ -11,22 +11,27 @@ def populate_file_list(dirpath):
     return file_list
 
 
-def delete_unwated_files(file_list):
+def delete_unwated_files(file_list, max_dir_size_bytes):
     amount_deleted = 0
+    total_file_size = 0
     for file_path in file_list:
-        lower_case_file_path = file_path.lower()
-        file_size_kb = os.stat(file_path).st_size / 1024
-        if (not ((lower_case_file_path.endswith('.jpeg')) or (lower_case_file_path.endswith('.jpg')) or (
-        lower_case_file_path.endswith('.png')))) or (file_size_kb > 900):
+        file_size_bytes = os.stat(file_path).st_size
+        if (total_file_size + file_size_bytes > max_dir_size_bytes):
             os.remove(file_path)
             amount_deleted = amount_deleted + 1
+        else:
+            total_file_size = total_file_size + file_size_bytes
     print('Number of Files Deleted :', amount_deleted)
+    print('Dir Size :', total_file_size / (1024 * 1024), " MB")
 
 
 if (__name__ == "__main__"):
     dirpath = sys.argv[1]
     if (os.path.exists(dirpath) and os.path.isdir(dirpath)):
-        print('Removing files that are not JPEGs or PNGs. Also removing files that are over 900kB')
+        max_dir_size_bytes = 4 * 1024 * 1024 * 1024  # 4GB
+        print('Reducing Directory until it is ', max_dir_size_bytes / (1024 * 1024), " MB")
         file_list = populate_file_list(dirpath)
         print("There are ", len(file_list), " files in total")
-        delete_unwated_files(file_list)
+        delete_unwated_files(file_list, max_dir_size_bytes)
+        file_list = populate_file_list(dirpath)
+        print("There are now ", len(file_list), " files remaining")
