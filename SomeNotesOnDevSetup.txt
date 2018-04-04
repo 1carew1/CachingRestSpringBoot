@@ -1,10 +1,15 @@
+# Build the Docker
+./gradlew buildDocker
+# Tag appropriately
+docker tag cachingrest:0.0.1-SNAPSHOT 1carew1/cachingrest:ehcache-512-LRU
+# Remove the old tag
+docker rmi cachingrest:0.0.1-SNAPSHOT
+# Push to Docker Hub
+docker push 1carew1/cachingrest:ehcache-512-LRU
+# Run via docker
+docker run --name spring_app_container  --add-host="db1:192.168.0.52" --add-host="cache:192.168.0.51" -p 8080:8080 -t -d 1carew1/cachingrest:ehcache-512-LRU
+
 # You can probably just use the Readmes for a better guide
-
-docker run --name spring_app_container -p 8080:8080 -t cachingrest:0.0.1-SNAPSHOT
-
-# Run from Docker Hub
-docker run --name spring_app_container  --add-host="db1:192.168.0.8" --add-host="cache:192.168.0.51" -p 8080:8080 -t 1carew1/cachingresttest
-
 docker start rediscontainer
 
 # Get into redis :
