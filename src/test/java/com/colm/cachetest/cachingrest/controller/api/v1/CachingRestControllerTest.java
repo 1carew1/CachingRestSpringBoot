@@ -25,14 +25,18 @@ public class CachingRestControllerTest {
 
     @Test
     public void testCreateBatch() {
+        String myJson = "{\"cacheType\":\"ehcache\", \"cacheSizeMb\":\"512\", \"evictionPolicy\":\"LRU\"}";
+
         given()
+                .contentType("application/json")
+                .body(myJson)
                 .port(port)
                 .when()
                 .post("/api/v1/batch")
                 .then()
                 .contentType(ContentType.JSON)
                 .body("cacheType", is("ehcache"))
-                .body("setupComment", is("Dry Run"));
+                .body("evictionPolicy", is("LRU"));
     }
 
     @Test
@@ -53,15 +57,19 @@ public class CachingRestControllerTest {
 
     @Test
     public void testPullingClassifiedImageFromCache() throws IOException {
+        String myJson = "{\"cacheType\":\"ehcache\", \"cacheSizeMb\":\"512\", \"evictionPolicy\":\"LRU\"}";
+
         final byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/testImages/testImage1.jpeg"));
         Integer batchId = given()
+                .contentType("application/json")
+                .body(myJson)
                 .port(port)
                 .when()
                 .post("/api/v1/batch")
                 .then()
                 .contentType(ContentType.JSON)
                 .body("cacheType", is("ehcache"))
-                .body("setupComment", is("Dry Run"))
+                .body("evictionPolicy", is("LRU"))
                 .extract()
                 .path("id");
 
@@ -87,7 +95,7 @@ public class CachingRestControllerTest {
 
 
     @Test
-    public void testIndexPage(){
+    public void testIndexPage() {
         given().port(port).when().get("/").then().assertThat().contentType(ContentType.HTML);
     }
 
