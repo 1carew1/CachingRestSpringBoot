@@ -24,7 +24,6 @@ request_headers_json = {
     'cache-control': 'private, max-age=0, no-cache'
 }
 
-
 class BatchInfo():
     cacheType = None
     cacheSizeMb = None
@@ -35,8 +34,10 @@ class BatchInfo():
         self.cacheSizeMb = cache_size_mb
         self.evictionPolicy = eviction_policy
 
-# Obtain a random image a post to the endpoint
-# random_photo = random.choice(imageLocations)
+# Get time difference in second
+def seconds_difference_between_dates(date1, date2):
+    time_diff = date1 - date2
+    return int(time_diff.total_seconds())
 
 # Get the batch
 def obtain_batch_id(batch_info):
@@ -94,7 +95,7 @@ def obtain_classification(file_path, file_contents, batch_id, request_path):
     return classification
 
 # Send the Requests of all the images
-def send_image_requests(file_list, batch_id, request_path):
+def check_cache(file_list, batch_id, request_path):
     number_of_images_processed = 0
     number_of_images_not_processed = 0
     # Send each image to the endpoint
@@ -109,11 +110,37 @@ def send_image_requests(file_list, batch_id, request_path):
                 number_of_images_not_processed = number_of_images_not_processed + 1
         else:
             print('File Contents was None :', image_location)
+    print("Number of images cache: ", number_of_images_processed)
+    print("Number of images that failed to retrieve: ", number_of_images_not_processed)
+
+# Send the Requests of all the images
+def send_image_requests(file_list, batch_id, request_path, run_time_seconds):
+    print("Time to test classification : ", run_time_seconds/60, " minutes")
+    number_of_images_processed = 0
+    number_of_images_not_processed = 0
+    classify_start = datetime.datetime.now()
+    classify_current = datetime.datetime.now()
+    while(seconds_difference_between_dates(classify_current, classify_start) <  run_time_seconds) :
+        random_photo = random.choice(file_list)
+        file_contents = obtain_file_contents(random_photo)
+        if (file_contents is not None):
+            classification = obtain_classification(random_photo, file_contents, batch_id, request_path)
+            if (classification is not None):
+                number_of_images_processed = number_of_images_processed + 1
+                print (request_path, ": ", number_of_images_processed,  " ",  random_photo, " Label :", classification['label'], " Probability : ", classification['probability'])
+            else:
+                number_of_images_not_processed = number_of_images_not_processed + 1
+        else:
+            print('File Contents was None :', random_photo)
+        classify_current = datetime.datetime.now()
     print("Number of images processed successfully: ", number_of_images_processed)
     print("Number of images that failed to process: ", number_of_images_not_processed)
+    print("Time testing images : ", seconds_difference_between_dates(classify_current, classify_start)/60)
 
 # Fill the Cache
 def fill_cache(file_list, cache_size_mb) :
+    fill_cache_start = datetime.datetime.now()
+    print("Fill Cache Start Time : ", fill_cache_start)
     print("Filling Cache. The cache size is : ", cache_size_mb, "MB")
     cache_size_bytes = float(cache_size_mb) * 1024 * 1024
     total_bytes_sent = 0
@@ -135,6 +162,9 @@ def fill_cache(file_list, cache_size_mb) :
     print("Number of images cached successfully: ", number_of_images_processed)
     print("Number of images that failed to cached: ", number_of_images_not_processed)
     print("MB sent to fill cache : ", (total_bytes_sent/(1024*1024)))
+    fill_cache_end = datetime.datetime.now()
+    time_diff_seconds = seconds_difference_between_dates(fill_cache_end, fill_cache_start)
+    return time_diff_seconds
 
 # Complete the batch
 def finish_batch(batch_id):
@@ -159,22 +189,23 @@ if (__name__ == "__main__"):
     file_pool = obtain_file_list(images_dir)
 
     # Fill the cache
-    fill_cache(file_pool, batch_info.cacheSizeMb)
+    time_to_fill_cache_seconds = fill_cache(file_pool, batch_info.cacheSizeMb)
+    time_to_fill_cache_minutes = time_to_fill_cache_seconds / 60
+    print("Total time to fill cache : ", time_to_fill_cache_minutes, " minutes")
 
     # Create a batch
     batch_id = obtain_batch_id(batch_info)
 
     # Test the cache by classifying images
-    send_image_requests(file_pool, batch_id, classify_image_path)
+    send_image_requests(file_pool, batch_id, classify_image_path, time_to_fill_cache_seconds * 10)
     # Check Whats left in Cache
-    send_image_requests(file_pool, batch_id, check_cache_path)
+    check_cache(file_pool, batch_id, check_cache_path)
     # Complete the Batch
     finish_batch(batch_id)
 
     script_end = datetime.datetime.now()
     print("Finish Time : ", script_end)
 
-    time_diff = script_end - script_start
-    time_diff_seconds = int(time_diff.total_seconds())
+    time_diff_seconds = seconds_difference_between_dates(script_end, script_start)
     time_diff_minutes = time_diff_seconds / 60
     print("Total time to run : ", time_diff_minutes, " minutes")
