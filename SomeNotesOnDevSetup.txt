@@ -9,6 +9,16 @@ docker push 1carew1/cachingrest:ehcache-512-LRU
 # Run via docker
 docker run --name spring_app_container  --add-host="db1:192.168.0.52" --add-host="cache:192.168.0.51" -p 8080:8080 -t -d 1carew1/cachingrest:ehcache-512-LRU
 
+
+
+# Run the python script
+python3 -u  sendRequestsToApi.py ehcache 512 LRU > send.log
+the ctrl z and bg to run in background
+
+# Run the prod java app
+java -Xmx3072m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.log
+then ctl z and bg to run in background
+
 # You can probably just use the Readmes for a better guide
 docker start rediscontainer
 

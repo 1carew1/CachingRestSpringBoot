@@ -214,7 +214,7 @@ if (__name__ == "__main__"):
     batch_id = obtain_batch_id(batch_info)
 
     # Test the cache by classifying images
-    send_image_requests(file_pool, batch_id, classify_image_path, time_to_fill_cache_seconds * 10)
+    send_image_requests(file_pool, batch_id, classify_image_path, time_to_fill_cache_seconds * 5)
     # Check Whats left in Cache
     check_cache(file_pool, batch_id, check_cache_path)
     # Complete the Batch
