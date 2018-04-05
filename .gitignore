@@ -32,3 +32,5 @@ images/
 # Log Files
 *.log
 scripts/*.log
+
+scripts/image_uniqueifier/
