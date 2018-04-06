@@ -37,7 +37,10 @@ public class ClassificationCacheManipulationService {
         log.info("Batch {}. Trying to Pull Image from Cache with hash : {}", batchId, imageHash);
         classifiedImage = classifyImageService.checkIfInCache(imageHash);
         if (classifiedImage != null) {
-            CacheRemainder cacheRemainder = new CacheRemainder(imageHash, batch);
+            Long fileSizekB = file.getSize() / 1024;
+            String fileName = file.getOriginalFilename();
+
+            CacheRemainder cacheRemainder = new CacheRemainder(imageHash, fileSizekB, fileName, batch);
             asynchDBService.saveEntity(cacheRemainder);
         }
         return classifiedImage;

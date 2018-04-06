@@ -12,14 +12,19 @@ public class CacheRemainder {
     @Column (name = "id", updatable = false, nullable = false)
     private Long id;
     private String imageHash;
+    private Long fileSizekB;
+    private String fileName;
+
     @ManyToOne
     @JoinColumn (name="batch_id")
     private CacheTestingBatch cacheTestingBatch;
 
     public CacheRemainder(){}
 
-    public CacheRemainder(String imageHash, CacheTestingBatch cacheTestingBatch) {
+    public CacheRemainder(String imageHash, Long fileSizekB, String fileName, CacheTestingBatch cacheTestingBatch) {
         this.imageHash = imageHash;
+        this.fileSizekB = fileSizekB;
+        this.fileName = fileName;
         this.cacheTestingBatch = cacheTestingBatch;
     }
 
@@ -41,5 +46,21 @@ public class CacheRemainder {
 
     public void setCacheTestingBatch(CacheTestingBatch cacheTestingBatch) {
         this.cacheTestingBatch = cacheTestingBatch;
+    }
+
+    public Long getFileSizekB() {
+        return fileSizekB;
+    }
+
+    public void setFileSizekB(Long fileSizekB) {
+        this.fileSizekB = fileSizekB;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
