@@ -1,6 +1,7 @@
 package com.colm.cachetest.cachingrest.service;
 
 
+import com.colm.cachetest.cachingrest.model.db.CacheInitialContent;
 import com.colm.cachetest.cachingrest.model.db.CachePerformance;
 import com.colm.cachetest.cachingrest.model.db.CacheRemainder;
 import com.colm.cachetest.cachingrest.model.db.CacheTestingBatch;
@@ -27,7 +28,7 @@ public class ClassificationCacheManipulationService {
     @Autowired
     private ClassifyImageService classifyImageService;
 
-    public ClassifiedImage checkCache(Long batchId, MultipartFile file) {
+    public ClassifiedImage checkCacheRemainder(Long batchId, MultipartFile file) {
         ClassifiedImage classifiedImage = null;
         CacheTestingBatch batch = batchService.obtainBatch(batchId);
         if (batch == null) {
@@ -42,6 +43,25 @@ public class ClassificationCacheManipulationService {
 
             CacheRemainder cacheRemainder = new CacheRemainder(imageHash, fileSizekB, fileName, batch);
             asynchDBService.saveEntity(cacheRemainder);
+        }
+        return classifiedImage;
+    }
+
+    public ClassifiedImage checkCacheInitialContent(Long batchId, MultipartFile file) {
+        ClassifiedImage classifiedImage = null;
+        CacheTestingBatch batch = batchService.obtainBatch(batchId);
+        if (batch == null) {
+            throw new MissingResourceException("Batch is not available", null, null);
+        }
+        String imageHash = ImageUtils.obtainFileHashFromMultipartFile(file);
+        log.info("Batch {}. Trying to Pull Image from Cache with hash : {}", batchId, imageHash);
+        classifiedImage = classifyImageService.checkIfInCache(imageHash);
+        if (classifiedImage != null) {
+            Long fileSizekB = file.getSize() / 1024;
+            String fileName = file.getOriginalFilename();
+
+            CacheInitialContent cacheInitialContent = new CacheInitialContent(imageHash, fileSizekB, fileName, batch);
+            asynchDBService.saveEntity(cacheInitialContent);
         }
         return classifiedImage;
     }

@@ -33,11 +33,18 @@ public class CachingRestController {
        return batchService.completeBatch(batchId);
     }
 
-    // see if the image is in Cache
-    @PostMapping(value = "/checkcache/{batchId}")
+    // see if the image is in Cache at the start of testing
+    @PostMapping(value = "/checkinitialcache/{batchId}")
     @CrossOrigin(origins = "*")
-    public ClassifiedImage checkCache(@PathVariable Long batchId, @RequestBody MultipartFile file) {
-        return classificationService.checkCache(batchId, file);
+    public ClassifiedImage checkInitialCache(@PathVariable Long batchId, @RequestBody MultipartFile file) {
+        return classificationService.checkCacheInitialContent(batchId, file);
+    }
+
+    // see if the image is in Cache at the end of testing
+    @PostMapping(value = "/checkcacheend/{batchId}")
+    @CrossOrigin(origins = "*")
+    public ClassifiedImage checkRemainderCache(@PathVariable Long batchId, @RequestBody MultipartFile file) {
+        return classificationService.checkCacheRemainder(batchId, file);
     }
 
     // For classifying the image with performance measurement

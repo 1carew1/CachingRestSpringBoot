@@ -11,7 +11,8 @@ import random
 base_url = "http://localhost:8080/api/v1/"
 classify_image_path = "classify"
 batch_path = "batch"
-check_cache_path = "checkcache"
+check_cache_path_start = "checkinitialcache"
+check_cache_path_end = "checkcacheend"
 images_dir = "../images/"
 
 # Ensure no caching
@@ -213,10 +214,13 @@ if (__name__ == "__main__"):
     # Create a batch
     batch_id = obtain_batch_id(batch_info)
 
+    # Check Whats in Cache at start
+    check_cache(file_pool, batch_id, check_cache_path_start)
+
     # Test the cache by classifying images
     send_image_requests(file_pool, batch_id, classify_image_path, time_to_fill_cache_seconds * 5)
     # Check Whats left in Cache
-    check_cache(file_pool, batch_id, check_cache_path)
+    check_cache(file_pool, batch_id, check_cache_path_end)
     # Complete the Batch
     finish_batch(batch_id)
 

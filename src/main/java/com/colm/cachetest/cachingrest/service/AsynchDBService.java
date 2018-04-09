@@ -1,7 +1,9 @@
 package com.colm.cachetest.cachingrest.service;
 
+import com.colm.cachetest.cachingrest.model.db.CacheInitialContent;
 import com.colm.cachetest.cachingrest.model.db.CachePerformance;
 import com.colm.cachetest.cachingrest.model.db.CacheRemainder;
+import com.colm.cachetest.cachingrest.repository.CacheInitialContentRepository;
 import com.colm.cachetest.cachingrest.repository.CachePerformanceRepository;
 import com.colm.cachetest.cachingrest.repository.CacheRemainderRepository;
 import com.colm.cachetest.cachingrest.threads.EntitySaver;
@@ -20,6 +22,8 @@ public class AsynchDBService {
     private CachePerformanceRepository cachePerformanceRepository;
     @Autowired
     private CacheRemainderRepository cacheRemainderRepository;
+    @Autowired
+    private CacheInitialContentRepository cacheInitialContentRepository;
 
     private ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
             .setNameFormat("DBSaver-%d").build();
@@ -31,6 +35,8 @@ public class AsynchDBService {
             savingThread = new EntitySaver(cachePerformanceRepository, entity);
         } else if(entity instanceof CacheRemainder) {
             savingThread = new EntitySaver(cacheRemainderRepository, entity);
+        } else if(entity instanceof CacheInitialContent) {
+            savingThread = new EntitySaver(cacheInitialContentRepository, entity);
         }
         if(savingThread != null) {
             executor.execute(savingThread);
