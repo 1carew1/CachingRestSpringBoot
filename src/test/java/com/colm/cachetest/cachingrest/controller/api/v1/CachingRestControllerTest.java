@@ -87,7 +87,7 @@ public class CachingRestControllerTest {
                 .port(port)
                 .multiPart("file", "myFile", bytes)
                 .when()
-                .post("/api/v1/checkcache/" + batchId)
+                .post("/api/v1/checkcacheend/" + batchId)
                 .then()
                 .contentType(ContentType.JSON)
                 .body("label", is("French bulldog"));
