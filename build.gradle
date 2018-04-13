@@ -42,7 +42,7 @@ dependencies {
 
     // EhCache 2 - Internal
     // https://mvnrepository.com/artifact/net.sf.ehcache/ehcache
-//    compile group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.4'
+    compile group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.4'
 
     // Infispan - Internal
 //    compile group: 'org.infinispan', name: 'infinispan-spring', version: '7.2.5.Final'
@@ -53,8 +53,8 @@ dependencies {
 //    compile group: 'com.couchbase.client', name: 'couchbase-spring-cache'
 
     // Redis - External
-     compile "org.springframework.boot:spring-boot-starter-data-redis"
-     compile "redis.clients:jedis:2.6.1"
+//     compile "org.springframework.boot:spring-boot-starter-data-redis"
+//     compile "redis.clients:jedis:2.6.1"
 
     // Memcached - External
 //    compile 'io.sixhours:memcached-spring-boot-starter:1.2.0'
