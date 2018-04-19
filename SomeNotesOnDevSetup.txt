@@ -38,7 +38,11 @@ mkdir mysql-data
 docker run --name mysqldev-db -p 3306:3306 -v ~/mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=cachetest -e MYSQL_USER=dbuser -eMYSQL_PASSWORD=password -d mysql:5.7.21
 
 
+# Get into mysql
+docker exec -it mysqldev-db 'sh'
+mysql -udbuser -ppassword cachetest
 
+# Note if you want to pass files to the container place them in the mysql-data folder
 
 
 
