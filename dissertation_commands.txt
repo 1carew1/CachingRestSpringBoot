@@ -1,0 +1,88 @@
+git pull
+./gradlew build
+
+# Redis
+sudo nano /etc/redis/redis.conf
+sudo systemctl restart redis
+# Check whats in cache
+redis-cli INFO | grep memory
+# Flush Cache
+redis-cli FLUSHALL
+# Look at all keys
+redis-cli --scan --pattern '*'
+
+
+# Memcached
+sudo nano /etc/memcached.conf
+# Set -m to whatever m value
+sudo systemctl restart memcached
+# Check whats in cache
+memcdump --servers 127.0.0.1:11211
+
+java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.redis.1024.LRU.2018_04_19.log
+
+python3 -u sendRequestsToApi.py redis 1024 LRU > send.redis.1024.LRU.2018_04_19.log
+
+
+__________________________________________________________
+
+# Check all permutations have been run
+
+SELECT 
+    cache_type,
+    cache_size_mb,
+    eviction_policy,
+    COUNT(*) number_of_runs
+FROM
+    batch
+GROUP BY cache_type , cache_size_mb , eviction_policy;
+
+__________________________________________________________
+
+# Add indexes
+ALTER TABLE cache_performance ADD INDEX image_hash (image_hash);
+ALTER TABLE cache_remainder ADD INDEX image_hash (image_hash);
+ALTER TABLE cache_initial_content ADD INDEX image_hash (image_hash);
+
+__________________________________________________________
+
+
+# Download a DB Dump
+ssc pidb 'mysqldump -udbuser -ppassword cachetest > cachetest.2018_04_19.dump'
+scp colm@pidb:/home/colm/cachetest.2018_04_19.dump ~/Downloads/
+
+
+__________________________________________________________
+
+
+# Memcached
+
+sudo apt-get remove libmemcached-tools
+sudo apt-get install memcached
+
+# Allow Memcached Access
+-l 0.0.0.0
+
+# Disable Memcached
+sudo systemctl disable memcached
+
+# Stop Memcached
+sudo systemctl stop memcached
+
+# Check whats in cache
+memcdump --servers 127.0.0.1:11211
+
+__________________________________________________________
+
+# Redis
+
+# Install
+sudo add-apt-repository ppa:chris-lea/redis-server
+sudo apt-get update
+sudo apt-get install redis-server
+sudo nano /etc/redis/redis.conf
+# Comment out bind 127.0.0.1
+# change to protected-mode no
+# maxmemory 128mb
+# maxmemory-policy allkeys-lru
+# comment out all save lines
