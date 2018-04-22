@@ -154,7 +154,15 @@ An active batch id is required (one without an end date set).
 Other than the batchId this endpoint behaves the same as `/api/v1/classify` in that you POST a MultiPart File that is an image and get back the same object.
 From the backend perspective calling this API will also save a Cache Performance entry.
 
-#### /api/v1/checkcache/{batchId}
+#### /api/v1/checkinitialcache/{batchId}
+This is for checking if an image is already in cache. Used for seeing what keys are in cache at the start of the batch before testing.
+
+For this endpoint you again POST a Multipart Image File and need an active batch id.
+If the image is in cache it will return the same response as `/api/v1/classify` else it will return nothing/blank response.
+
+This will save a Cache Initial Content Entity which relates to the batch to the DB if the image was in cache.
+
+#### /api/v1/checkcacheend/{batchId}
 This is for checking if an image is already in cache. Used for seeing what keys are left in cache when finishing the batch.
 
 For this endpoint you again POST a Multipart Image File and need an active batch id.
@@ -167,6 +175,7 @@ The recommended way to test cache performance is to
 - Configure the desired cache
 - Fill the cache - POST `/api/v1/classify`
 - Create a batch - POST `/api/v1/batch`
+- Check what is in cache before testing - POST `/api/v1/checkinitialcache/{batchId}`
 - Run Test Sequence of Images - POST `/api/v1/classify/{batchId}`
 - Once Sequence is finished check what is left in cache - POST `/api/v1/checkcache/{batchId}`
 - Finish the batch - PUT `/api/v1/batch/{batchId}`
@@ -183,7 +192,7 @@ You will need python3 installed for this.
 
 ```
 cd scripts
-python3 sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY
+python3 -u sendRequestsToApi.py CACHE_TYPE CACHE_SIZE_MB EVICTION_POLICY
 ```
 
 - `CACHE_TYPE` is the cache being used in the test : ehcache, redis, memcached etc.

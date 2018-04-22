@@ -20,7 +20,7 @@ maxmemory-policy allkeys-lru
 ```
 
 - `maxmemory` is the maximum size of the cache
-- `maxmemory-policy` can be : `noeviction`, `allkeys-lru`, `allkeys-random`
+- `maxmemory-policy` can be : `noeviction`, `allkeys-lru`, `allkeys-lfu`,`allkeys-random`
 
 Note there needs to be over 10 elements in cache for eviction to take place else an exception wll be thrown.
 

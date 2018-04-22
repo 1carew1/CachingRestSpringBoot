@@ -19,9 +19,9 @@ sudo systemctl restart memcached
 # Check whats in cache
 memcdump --servers 127.0.0.1:11211
 
-java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.redis.1024.LRU.2018_04_19.log
+java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.redis.512.LRU.2018_04_22.log
 
-python3 -u sendRequestsToApi.py redis 1024 LRU > send.redis.1024.LRU.2018_04_19.log
+python3 -u sendRequestsToApi.py redis 512 LRU > send.redis.512.LRU.2018_04_22.log
 
 
 __________________________________________________________
@@ -35,7 +35,7 @@ SELECT
     COUNT(*) number_of_runs
 FROM
     batch
-GROUP BY cache_type , cache_size_mb , eviction_policy;
+GROUP BY cache_type , cache_size_mb , eviction_policy order by cache_type, eviction_policy, cache_size_mb;
 
 __________________________________________________________
 
@@ -48,8 +48,8 @@ __________________________________________________________
 
 
 # Download a DB Dump
-ssc pidb 'mysqldump -udbuser -ppassword cachetest > cachetest.2018_04_19.dump'
-scp colm@pidb:/home/colm/cachetest.2018_04_19.dump ~/Downloads/
+ssc 192.168.0.52 'mysqldump -udbuser -ppassword cachetest > cachetest.2018_04_21.dump'
+scp colm@192.168.0.52:/home/colm/cachetest.2018_04_21.dump ~/Downloads/
 
 
 __________________________________________________________
