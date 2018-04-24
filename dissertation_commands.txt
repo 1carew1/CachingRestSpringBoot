@@ -19,10 +19,17 @@ sudo systemctl restart memcached
 # Check whats in cache
 memcdump --servers 127.0.0.1:11211
 
-java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.redis.512.LRU.2018_04_22.log
+java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.redis.512.LRU.2018_04_24.log
 
-python3 -u sendRequestsToApi.py redis 512 LRU > send.redis.512.LRU.2018_04_22.log
+python3 -u sendRequestsToApi.py redis 512 LRU > send.redis.512.LRU.2018_04_24.log
 
+__________________________________________________________
+# Tail Logs
+cd ~/cachingrest
+tail -f $(ls -rt | tail -n 1)
+
+cd ~/cachingrest/scripts
+tail -f $(ls -rt | tail -n 1)
 
 __________________________________________________________
 
@@ -48,8 +55,8 @@ __________________________________________________________
 
 
 # Download a DB Dump
-ssc 192.168.0.52 'mysqldump -udbuser -ppassword cachetest > cachetest.2018_04_21.dump'
-scp colm@192.168.0.52:/home/colm/cachetest.2018_04_21.dump ~/Downloads/
+ssc 192.168.0.52 'mysqldump -udbuser -ppassword cachetest > cachetest.2018_04_23.dump'
+scp colm@192.168.0.52:/home/colm/cachetest.2018_04_23.dump ~/Downloads/
 
 
 __________________________________________________________
