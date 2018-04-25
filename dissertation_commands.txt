@@ -3,7 +3,7 @@ git pull
 
 # Redis
 sudo nano /etc/redis/redis.conf
-sudo systemctl restart redis
+/etc/init.d/redis-server restart
 # Check whats in cache
 redis-cli INFO | grep memory
 # Flush Cache
@@ -19,9 +19,9 @@ sudo systemctl restart memcached
 # Check whats in cache
 memcdump --servers 127.0.0.1:11211
 
-java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.redis.512.LRU.2018_04_24.log
+java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.memcached.1024.LRU.2018_04_25.log
 
-python3 -u sendRequestsToApi.py redis 512 LRU > send.redis.512.LRU.2018_04_24.log
+python3 -u sendRequestsToApi.py memcached 1024 LRU > send.memcached.1024.LRU.2018_04_25.log
 
 __________________________________________________________
 # Tail Logs
@@ -93,3 +93,9 @@ sudo nano /etc/redis/redis.conf
 # maxmemory 128mb
 # maxmemory-policy allkeys-lru
 # comment out all save lines
+
+# Start
+/etc/init.d/redis-server start
+
+#Stop
+/etc/init.d/redis-server stop
