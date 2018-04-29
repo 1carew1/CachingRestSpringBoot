@@ -37,9 +37,9 @@ The project can be built from the root via :
 
 Once built, the jar can be run from the root of the project via :
 
-```java -Xmx3072m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar```
+```java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar```
 
-Note : `-Xmx3072m` will set the heap to 3GB. The cache size should not be more than 80% of the heap (this only apply to internal caches).
+Note : `-Xmx2048m` will set the heap to 2GB. The cache size should not be more than 80% of the heap (this only apply to internal caches).
 
 ### Database
 Setup the database [here](documentation/DATABASESETUP.MD)
