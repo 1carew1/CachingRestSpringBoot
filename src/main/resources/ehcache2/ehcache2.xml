@@ -8,7 +8,7 @@
 
     -->
     <cache name="imageClassifications"
-           maxBytesLocalHeap="1024M"
+           maxBytesLocalHeap="512M"
            eternal="true"
            overflowToDisk="false"
            memoryStoreEvictionPolicy="LRU">
