@@ -11,7 +11,7 @@
 
     -->
     <map name="imageClassifications">
-        <max-size policy="USED_HEAP_SIZE">512</max-size>
+        <max-size policy="USED_HEAP_SIZE">1024</max-size>
         <eviction-policy>LRU</eviction-policy>
     </map>
 
