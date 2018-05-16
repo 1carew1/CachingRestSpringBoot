@@ -11,7 +11,7 @@
            maxBytesLocalHeap="512M"
            eternal="true"
            overflowToDisk="false"
-           memoryStoreEvictionPolicy="LFU">
+           memoryStoreEvictionPolicy="FIFO">
     </cache>
 
 </ehcache>
