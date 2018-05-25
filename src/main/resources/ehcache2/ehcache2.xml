@@ -8,10 +8,10 @@
 
     -->
     <cache name="imageClassifications"
-           maxBytesLocalHeap="512M"
+           maxBytesLocalHeap="128M"
            eternal="true"
            overflowToDisk="false"
-           memoryStoreEvictionPolicy="FIFO">
+           memoryStoreEvictionPolicy="LRU">
     </cache>
 
 </ehcache>
