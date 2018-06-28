@@ -207,3 +207,6 @@ sudo apt-get install python-setuptools
 sudo easy_install pip
 sudo pip install requests
 ```
+
+### Known Issues
+* In CacheTestingBatch.java, cacheSizeMb is stored as a string, should be a numeric

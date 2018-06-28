@@ -19,9 +19,9 @@ sudo systemctl restart memcached
 # Check whats in cache
 memcdump --servers 127.0.0.1:11211
 
-java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.ehcache.128.LRU.2018_05_10.log
+java -Xmx2048m -Dspring.profiles.active=prod -jar build/libs/cachingrest-0.0.1-SNAPSHOT.jar > application.ehcache.512.LFU.2018_05_15.2.log
 
-python3 -u sendRequestsToApi.py ehcache 128 LRU > send.ehcache.128.LRU.2018_05_10.log
+python3 -u sendRequestsToApi.py ehcache 512 LFU > send.ehcache.512.LFU.2018_05_15.2.log
 
 __________________________________________________________
 # Tail Logs
